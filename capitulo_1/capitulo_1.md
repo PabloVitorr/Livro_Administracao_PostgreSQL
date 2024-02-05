@@ -1,4 +1,4 @@
-# **Instalações e orientações sobre suporte e versões**
+# **Instalaçõe e orientações sobre suporte e versões**
 ## **Instalação do CentOS**
 
 [Download](https://www.centos.org/download/ "CentOS download")
@@ -76,7 +76,7 @@ var/lib/pgsql/14/data/postgresql.conf
 <br/>
 
 **Alterando parâmetro permitindo conexões remotas**
-```bash
+```conf
 #------------------------------------------------------------------------------
 # CONNECTIONS AND AUTHENTICATION
 #------------------------------------------------------------------------------
