@@ -147,5 +147,5 @@ sudo -i -u postgres psql
 <br/>
 
 ```sql
-alter user postgres with ecrypted password '<password>'
+alter user postgres with encrypted password '<password>'
 ```
