@@ -2,7 +2,7 @@
 ## **Estrutura física do PostgreSQL9.4**
 Na figura abaixo, visualizamos a estrutura básica do servidor PostgreSQL em sua versão 9.4. Na versão 10, tenciona-se alterar a denominação da localização **pg_xlog** para **pg_wal** além de outras mudanças até chegarmos a versão 14 utilizada instalada para acompanhamento do livro.
 
-![Estrutura física do PostgreSQL14](./img/estrutura_fisica_postgresql.svg "Estrutura física do PostgreSQL14")
+![Estrutura física do PostgreSQL14](./img/estrutura_fisica_postgresql.svg "Estrutura física do PostgreSQL9.4")
 <br/>
 
 #### No nível mais alto da hierarquia do PostgreSQL, temos os arquivos de configuração, sendo eles:
@@ -37,3 +37,24 @@ Na figura abaixo, visualizamos a estrutura básica do servidor PostgreSQL em sua
 - **pg_stat (PostgreSQL14) -** Subdiretório contendo arquivos permanentes para o sistema de estatisticas;
 
 - **pg_subtrans -** Subdiretório que contém os dados de estado de subtransações;
+
+- **pg_tblspc -** Subdiretório que contem os **links simbólicos** para as tablespaces;
+
+- **pg_twophase -** Subdiretório que contem os estados para transações do tipo **prepared transactions** 
+
+- **pg_wal -** Subdiretorio que contem os arquivos de **wal** (Write Ahead Log);
+
+- **postmaster.opts** Arquivo que armazena as **opções de linha de comando da última inicialização do cluster**, ou seja é um arquivo que registra as opções de linha de comando com as quais o servidor foi iniciado pela última vez;
+
+- **postmaster.pid -** Arquivo que armazena as informações **PID** e **ID**;
+
+- **postgresql.conf -** Principal arquivo de configuração do cluster;
+
+- **pg_hba.conf -** Arquivo que configura a conexão entre databases e clientes;
+
+- **pg_ident.conf -** Arquivo que relaciona os usuarios as bases de dados, por padrão vazio
+
+## **Estrutura de processos do PostgreSQL9.4**
+
+![Estrutura de Processos](./img/estrutura_de_processos.svg "Estrutura de Processos PostgreSQL9.4")
+
