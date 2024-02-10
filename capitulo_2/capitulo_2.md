@@ -139,8 +139,10 @@ Nessa estrutura, um processo deve solicitar explicitamente uma área de memória
     
     No PostgreSQL, quando uma linha é atualizada, uma nova versão desta é criada e inserida na tabela. A versão anterior é fornecida como um ponteiro para a nova. Ela é marcada como "expirada", mas permanece no banco de dados até que o "coletor de lixo" a elimine (processo de VACUUM). Para suportar a multiversão, cada tupla possui dois dados adicionais gravados em si:
 
-    - **xmin** O ID da transação que inseriu/atualizou a linha e criou a tupla;
-    - **xmax** A transação que excluiu a linha ou criou uma nova versão da tupla. Inicialmente este campo é nulo.
+    - **xmin**<br/>
+      O ID da transação que inseriu/atualizou a linha e criou a tupla;
+    - **xmax**<br/>
+      A transação que excluiu a linha ou criou uma nova versão da tupla. Inicialmente este campo é nulo.
 
 O status da transação é mantido em clog **$PGDATA/pg_clog** (**pg_commit_ts** psql version 14). Essa tabela contém dois bits de informações de status para cada transação. Os possíveis estados são: **em andamento**, **sofreram commit** ou **abortado**.
 
