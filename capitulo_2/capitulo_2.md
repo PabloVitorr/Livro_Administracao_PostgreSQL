@@ -122,10 +122,6 @@ Nessa estrutura, um processo deve solicitar explicitamente uma área de memória
 
 A área da **SHARED MEMORY** utilizada pelo PostgreSQL divide-se em duas estruturas, **WAL BUFFER** e **SHARED BUFFER**:
 
-Nessa estrutura, um processo deve solicitar explicitamente uma área de memória, usando uma chave, para ser compartilhada por outros processos. Esse processo será chamado de servidor. Todos os demais processos, os clientes, que conhecem a área compartilhada, podem acessá-la. Assim não há preteção para uma memória compartilhada, fazendo com que qualquer processo que tenha a chave possa acessá-la livremente.
-
-**A área da SHARED MEMORY utilizada pelo PostgreSQL divide-se em duas estruturas, WAL BUFFER e SHARED BUFFER**
-
 ![Estrutura de Memória do PostgreSQL](./img/estrutura_de_memoria_do_postgresql.svg "Estrutura de memória PostgreSQL")
 
 - **WALL BUFFER**<br/>
