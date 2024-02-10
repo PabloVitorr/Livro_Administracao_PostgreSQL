@@ -149,3 +149,7 @@ sudo -i -u postgres psql
 ```sql
 alter user postgres with encrypted password '<password>';
 ```
+
+[PROXIMA ->](../capitulo_2/capitulo_2.md)
+
+[HOME](../README.md)
