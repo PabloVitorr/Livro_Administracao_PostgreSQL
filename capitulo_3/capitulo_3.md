@@ -26,18 +26,22 @@ O principal arquivo de configuração do PostgreSQL, normalmente localizado em *
 
 - **FILE LOCATIONS**<br/>
   Seção onde são definidos localização e nomes de arquivos, como **hba_file**, **ident_file**, **data_directory** entre outros.
+  
   ![Seção FILE LOCATIONS](./img/secao_file_locations.png "Seção FILE LOCATIONS")
 
-- **CONNECTIONS AND AUTHENTICATION**
+- **CONNECTIONS AND AUTHENTICATION**<br/>
   Seção que define as possibilidades de conexão e autenticação, como porta, protocolo entre outros.
+  
   ![Seção CONNECTIONS AND AUTHENTICATION](./img/secao_connections_and_authentication.png "Seção CONNECTIONS AND AUTHENTICATION")
 
 - **RESOURSE USAGE**<br/>
   Seção que define a utilização de recursos pelo database **memória**, **disco** entre outros.
+  
   ![Seção RESOURSE USAGE](./img/secao_resource_usage.png "Seção RESOURCE USAGE")
 
 - **WRITE-AHEAD LOG**<br/>
   Seção que define as possibilidades de ajuste do **WAL**.
+  
   ![Seção WRITE-AHEAD LOG](./img/secao_write_ahead_log.png)
 
 **Analisando alguns parâmetros do postgresql.conf**
@@ -119,3 +123,8 @@ Caso seja necessária  a localização dos arquivos, podemos utilizar o seguinte
 SELECT name, setting FROM pg_settings WHERE category = 'File Locations';
 ```
 
+[<- ANTERIOR](../capitulo_2/capitulo_2.md)
+
+[PROXIMA ->](../capitulo_4/capitulo_4.md)
+
+[HOME](../README.md)
