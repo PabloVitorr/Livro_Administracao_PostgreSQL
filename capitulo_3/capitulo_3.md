@@ -1,4 +1,4 @@
-## **Arquivos de configuração**
+# **Arquivos de configuração**
 
 ## **postgresql.conf**<br/>
 O principal arquivo de configuração do PostgreSQL, normalmente localizado em **$PGDATA**. Esse arquivo prescreve o comportamento para o cluster inteiro, ou seja, não é possível configurar comportamentos diferentes em relação a cada banco de dados. É necessário ter em mente que a partir da versão 9.4 foi adicionado o **ALTER SYSTEM**, que permite alterar os valores de parâmetros sem modificar o postgresql.conf. Por isso é **recomendado a verificação dos valores do parâmetro do PostgreSQL seja sempre realizada pela view pg_settings**. Os parâmetros ali encontrados dividem-se em várias seções no arquivo:
