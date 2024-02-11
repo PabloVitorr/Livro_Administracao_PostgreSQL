@@ -81,8 +81,8 @@ SELECT
 		WHEN 'user' THEN 'Reload Config/User SET'
 	END AS when_changed
 FROM pg_settings
-WHERE context != 'internal'
-ORDER BY when_changed;
+  WHERE context != 'internal'
+  ORDER BY when_changed;
 ```
 
 ![Consulta utilizando a pg_settings](./img/saida_consulta_pg_settings.png)

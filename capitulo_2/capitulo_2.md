@@ -130,7 +130,10 @@ A área da **SHARED MEMORY** utilizada pelo PostgreSQL divide-se em duas estrutu
 - **SHARED BUFFER**<br/>
   Armazena os blocos de memória, minimizando o acesso ao armazenamento persistente e a contenção quando um grande número de usuários realizam acessos simultaneamente.
   
-  - **MVCC (Multversion Concurrency Control)**<br/>
+  - **MVCC (Multversio
+<br/>
+
+[<<==](../capitulo_3/capitulo_3.md) |====| [Home](../README.md) |====| [==>>](../capitulo_5/capitulo_5.md)n Concurrency Control)**<br/>
     é o método utilizado pelo PostgreSQL para lidar com a consistência dos dados quando multiplos processos acessam uma mesma tabela.
     
     No PostgreSQL, quando uma linha é atualizada, uma nova versão desta é criada e inserida na tabela. A versão anterior é fornecida como um ponteiro para a nova. Ela é marcada como "expirada", mas permanece no banco de dados até que o "coletor de lixo" a elimine (processo de VACUUM). Para suportar a multiversão, cada tupla possui dois dados adicionais gravados em si:
