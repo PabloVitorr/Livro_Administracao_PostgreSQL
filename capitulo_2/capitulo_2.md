@@ -146,8 +146,6 @@ O PostgreSQL não desfaz as alterações nas linhas do database quando uma trans
 
 **Um processo de VACUUM é fornecido para eliminar os conteúdos das versões expiradas/abortadas de uma linha.**
 
-[<- ANTERIOR](../capitulo_1/capitulo_1.md)
+<br/>
 
-[PROXIMA ->](../capitulo_3/capitulo_3.md)
-
-[HOME](../README.md)
+[<<==](../capitulo_1/capitulo_1.md) |====| [Home](../README.md) |====| [==>>](../capitulo_3/capitulo_3.md)

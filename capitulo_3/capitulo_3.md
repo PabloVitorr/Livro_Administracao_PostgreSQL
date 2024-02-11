@@ -134,8 +134,8 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
 
 ---
 
-|Local|Database|User|Aut-metod|[auth-options]| |
-|:-----:|:--------:|:----:|:---------:|:--------------:|::|
+|Local|Database|User|Aut-metod|[auth-options]|-|
+|:-----:|:--------:|:----:|:---------:|:--------------:|:-:|
 |Host|Database|User|Address|Aut-method|[auth-method]|
 |Hostssl|Database|User|Address|Aut-method|[auth-method]|
 |Hostnossl|Database|User|Address|Aut-method|[auth-options]|
@@ -219,8 +219,6 @@ su - postgres
 
 ![Login usuario postgres](./img/login_postgres.png)
 
-[<- ANTERIOR](../capitulo_2/capitulo_2.md)
+<br/>
 
-[PROXIMA ->](../capitulo_4/capitulo_4.md)
-
-[HOME](../README.md)
+[<<==](../capitulo_2/capitulo_2.md) |====| [Home](../README.md) |====| [==>>](../capitulo_4/capitulo_4.md)
