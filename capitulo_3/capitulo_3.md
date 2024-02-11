@@ -123,6 +123,102 @@ Caso seja necessária  a localização dos arquivos, podemos utilizar o seguinte
 SELECT name, setting FROM pg_settings WHERE category = 'File Locations';
 ```
 
+![Localização arquivos](./img/localizacao_arquivos.png)
+
+Existem em **postgresql.org** várias referências de como calcular os parâmetros, mas, revendo a literatura, encontramos diversos profissionais que o fazem de forma empírica ou com ajustes - isso fica a critério do **DBA**. Lembramos que a natureza dos ajustes está muito relacionada à natureza do sistema (OLTPx, BI etc.).
+
+## **pg_hba.conf**
+A autenticação no **cluster** é controlada por um arquivo de configuração tradicionalmente chamado **pg_hba.conf**, armazenado no diretório de dados do cluster **$PGDATA** (HBA - host-based autentication (autenticação baseada em host)). Um arquivo **pg_hba.conf** padrão é instalado quando o diretório de dados é inicializado pelo **initdb**.
+
+<br/>
+
+---
+
+|Local|Database|User|Aut-metod|[auth-options]| |
+|:-----:|:--------:|:----:|:---------:|:--------------:|::|
+|Host|Database|User|Address|Aut-method|[auth-method]|
+|Hostssl|Database|User|Address|Aut-method|[auth-method]|
+|Hostnossl|Database|User|Address|Aut-method|[auth-options]|
+|Host|Database|User|IP-address|IPmask Aut-method|Aut-method [auth-options]
+|Hostssl|Database|User|IP-address|IPmask / Aut-method|Aut-method / [auth-options]
+|Hostnossl|Database|User|IP-address|IPmask / Aut-method|Aut-method / [auth-options]
+
+---
+
+<br/>
+
+- **Local**<br/>
+  Conexão usando sequetes de domínio **Unix**. Sem um registro de tipo, as conexões de soquete de domínio não são permitidas. Quando não é inserida a opção **-h**, o **PSQL** tenta conectar-se por esse método.
+
+- **Host**<br/> 
+  Conexão usando **TCP/IP**. Os registros do host combinam tentativas de conexão **SSL** ou não **SSL**. Conexões remotas serão possíveis somente se o servidor for iniciado com o valor apropriado de **listen_addresses**, **postgresql.conf**, cujo valor padrão é **localhost**.
+
+- **Hostssl**<br/> 
+  Conexão usando **TCP/IP**, mas somente quando efetuada com criptografia **SSL**. Para fazer uso dessa opção, o servidor deve ser construído com suporte **SSL**. Além disso, o **SSL** deve ser ativado no início do servidor, definindo o parâmetro de configuração **SSL**.
+
+- **Hostnossl**<br/>
+  Conexão usando **TCP/IP**, mas com comportamento oposto ao de **hostssl**. Apenas combina tentativas de conexão feitas através de **TCP/IP** que não usam **SSL**.
+
+- **Database**<br/>
+  Especifica quais databases o registro correspondente pode acessar. O valor **all** determina que qualquer database válido pode ser acessado. Multiplos nomes podem ser fornecidos separados por vírgula, pode ser criado tambem um arquivo separado com nomes dos databases onde o arquivo pode ser especificado antes do nome do arquivo com **@**
+
+- **User**<br/>
+  Especifica quais nomes de usuário de database esse registro corresponde. O valor **all** refere-se a todos os usuários.
+
+- **Address**<br/>
+  Especifica o(s) endereço(s) da máquina do cliente a quem este registro corresponde. Esse campo pode conter um nome de **host**, um intervalo de endereço **IP** ou uma das palavras-chave especiais.
+
+- **IP-adress e IP-mask**<br/>
+  Estes dois campos podem ser usados como uma alternativa à notação de endereço IP/máscara. Em vez de indicar o comprimento da máscara, a máscara real é especificada em uma coluna separada.
+
+**Estes campos aplicam-se somente aos registros host, hostssl e hostnossl**
+
+- **Auth-method**<br/>
+  Especifica o **método** de **autenticação** a ser usado quando uma conexão corresponde a este registro.
+
+- **Trust**<br/>
+  Este método **permite conexões incondicionalmente**. Possibilita que qualquer pessoa conecte-se ao servidor SGBD PostgreSQL para entrar como qualquer usuário do PostgreSQL que deseje, sem a necessidade de uma senha ou outra autenticação.
+
+- **Reject**<br/> 
+  **Rejeita a conexão incondicionalmente**. Isso é útil para **“filtrar” determinados hosts de um grupo**; por exemplo uma linha de rejeição para bloquear um host específico, enquanto uma linha posterior permite que os hosts restantes de uma rede específica conectem-se;
+
+- **MD5**<br/> 
+  Exige que o cliente forneça uma senha criptografada **MD5** para autenticação.
+
+- **Password**<br/> 
+  Exige que o cliente forneça uma senha não criptografada para autenticação.
+
+- **Ident**<br/>
+  Recupera o nome de usuário do sistema operacional cliente contatando o servidor ident no cliente e verificando se este corresponde ao nome de usuário do database solicitado. A autenticação de ident (identidade) pode ser usada **somente em conexões TCP/IP**.
+
+- **Peer**<br/> 
+  Recupera o nome de usuário do sistema operacional cliente e verifica se este corresponde ao nome de usuario do database solicitado.
+
+- **LDAP**<br/> 
+  Realia a autenticação recorrendo a um servidor LDAP (por exemplo Novell, Microsoft AD etc.).
+
+- **Cert**<br/> 
+  Realiza a autenticação usando certificados SSL do cliente.
+
+- **PAM**<br/> Realiza a autenticação usando o serviço de Módulos de Autenticação Plug-in (PAM) fornecido pelo sistema operacional.
+  
+- **Auth-options**<br/>
+  Depois do campo de método de autenticação, pode(m) haver campo(s) de nome do formulário = valor que especifica opções para o método de autenticação. **Dessa forma, pela combinação dos elementos citados anteriormente, esse arquivo descreve quem pode, de onde se pode e como se pode fazer a autenticação (MD5, LDPA etc)**.
+
+**Para que as configurações surtam efeito - sejam carregadas no cluster, é necessário forçar o cluster a ler novamente os arquivos postgresql.conf e pg_hba.conf. Podemos fazer isso com o seguinte comando no Linux, Red Hat, CentOS o Oracle, versão 7:**
+
+```bash
+systemctl reload postgresql-9.4
+```
+
+Depois de configurado, precisamos realizar a conexão ao cluster, o usuário inicial é o **postgres**, o **owner** do cluster. O usuário postgres é gerado por dafault na criação do cluster, podendo ser realizado o primeiro acesso dessa forma:
+
+```bash
+su - postgres
+```
+
+![Login usuario postgres](./img/login_postgres.png)
+
 [<- ANTERIOR](../capitulo_2/capitulo_2.md)
 
 [PROXIMA ->](../capitulo_4/capitulo_4.md)
