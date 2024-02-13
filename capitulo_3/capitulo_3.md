@@ -132,8 +132,6 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
 
 <br/>
 
----
-
 |Local|Database|User|Aut-metod|[auth-options]|-|
 |:-----:|:--------:|:----:|:---------:|:--------------:|:-:|
 |Host|Database|User|Address|Aut-method|[auth-method]|
@@ -142,8 +140,6 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
 |Host|Database|User|IP-address|IPmask Aut-method|Aut-method [auth-options]
 |Hostssl|Database|User|IP-address|IPmask / Aut-method|Aut-method / [auth-options]
 |Hostnossl|Database|User|IP-address|IPmask / Aut-method|Aut-method / [auth-options]
-
----
 
 <br/>
 

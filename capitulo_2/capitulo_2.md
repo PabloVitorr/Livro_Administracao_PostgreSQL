@@ -1,5 +1,7 @@
 # **Estruturas do PostgreSQL**
+
 ## **Estrutura física do PostgreSQL9.4**
+
 Na figura abaixo, visualizamos a estrutura básica do servidor PostgreSQL em sua versão 9.4. Na versão 10, tenciona-se alterar a denominação da localização **pg_xlog** para **pg_wal** além de outras mudanças até chegarmos a versão 14 utilizada para acompanhamento do livro.
 
 ![Estrutura física do PostgreSQL14](./img/estrutura_fisica_postgresql.svg "Estrutura física do PostgreSQL9.4")
@@ -116,6 +118,7 @@ ps auxww | grep ^postgres
   É um processo no PostgreSQL responsável por iniciar e monitorar os processos de replicação lógica no servidor, onde replicação lógica é uma técnica que envia alterações de dados de uma origem para um destino usando uma representação lógica dos dados (como registros inseridos, atualizados ou excluídos), em vez de simplesmente copiar os blocos de dados brutos (como na replicação física).
 
 ## **Estrutura de memória do PostgreSQL**
+
 As estruturas de memória do PostgreSQL estão na shared memory (memória compartilhada) do sistema operacional.
 
 Nessa estrutura, um processo deve solicitar explicitamente uma área de memória, usando uma chave, para ser compartilhada por outros processos. Esse processo será chamado de servidor. Todos os demais processos, os clientes, que conhecem a área compartilhada, podem acessá-la. Assim, não há proteção para uma memória compartilhada, fazendo com que qualquer processo que tenha a chave possa acessá-la livremente.
@@ -130,16 +133,14 @@ A área da **SHARED MEMORY** utilizada pelo PostgreSQL divide-se em duas estrutu
 - **SHARED BUFFER**<br/>
   Armazena os blocos de memória, minimizando o acesso ao armazenamento persistente e a contenção quando um grande número de usuários realizam acessos simultaneamente.
   
-  - **MVCC (Multversio
-<br/>
-
-[<<==](../capitulo_3/capitulo_3.md) |====| [Home](../README.md) |====| [==>>](../capitulo_5/capitulo_5.md)n Concurrency Control)**<br/>
+- **MVCC (Multversion Concurrency Control)**<br/>
     é o método utilizado pelo PostgreSQL para lidar com a consistência dos dados quando multiplos processos acessam uma mesma tabela.
     
     No PostgreSQL, quando uma linha é atualizada, uma nova versão desta é criada e inserida na tabela. A versão anterior é fornecida como um ponteiro para a nova. Ela é marcada como "expirada", mas permanece no banco de dados até que o "coletor de lixo" a elimine (processo de VACUUM). Para suportar a multiversão, cada tupla possui dois dados adicionais gravados em si:
 
     - **xmin**<br/>
       O ID da transação que inseriu/atualizou a linha e criou a tupla;
+
     - **xmax**<br/>
       A transação que excluiu a linha ou criou uma nova versão da tupla. Inicialmente este campo é nulo.
 
