@@ -69,17 +69,17 @@ A **view** **pg_settings** fornece acesso aos parâmetros de tempo de execução
 
 ```sql
 SELECT 
-	name,
-	setting,
-	unit,
-	source,
-	CASE context
-		WHEN 'postmaster' THEN 'REQUIRES RESTART'
-		WHEN 'sighup' THEN 'Reload Config'
-		WHEN 'backend' THEN 'Reload Config'
-		WHEN 'superuser' THEN 'Reload Config/Superuser'
-		WHEN 'user' THEN 'Reload Config/User SET'
-	END AS when_changed
+  name,
+  setting,
+  unit,
+  source,
+  CASE context
+    WHEN 'postmaster' THEN 'REQUIRES RESTART'
+    WHEN 'sighup' THEN 'Reload Config'
+    WHEN 'backend' THEN 'Reload Config'
+    WHEN 'superuser' THEN 'Reload Config/Superuser'
+    WHEN 'user' THEN 'Reload Config/User SET'
+  END AS when_changed
 FROM pg_settings
   WHERE context != 'internal'
   ORDER BY when_changed;
