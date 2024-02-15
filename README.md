@@ -9,3 +9,4 @@ Repositório destinado a leitura do livro Administração PostgreSQL
 4. [Capitulo 4](./capitulo_4/capitulo_4.md "Capitulo 4")
 5. [Capitulo 5](./capitulo_5/capitulo_5.md "Capitulo 5")
 6. [Capitulo 6](./capitulo_6/capitulo_6.md "Capitulo 6")
+7. [Capitulo 7](./capitulo_7/capitulo_7.md "Capitulo 7")

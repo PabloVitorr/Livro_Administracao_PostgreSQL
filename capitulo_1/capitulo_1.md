@@ -1,4 +1,5 @@
 # **Instalaçõe e orientações sobre suporte e versões**
+
 ## **Instalação do CentOS**
 
 [Download](https://www.centos.org/download/ "CentOS download")
@@ -13,6 +14,7 @@ yum update
 ```
 
 #### Configurar timezone
+
 ```bash
 timedatectl set-timezone America/Sao_Paulo
 ```

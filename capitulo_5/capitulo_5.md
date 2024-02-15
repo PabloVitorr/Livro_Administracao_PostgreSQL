@@ -3,7 +3,7 @@
 ## **pg_xlog (pg_wal PostgreSQL14)**
 Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versão 10). O **pg_wal** geralmente sofre gravação contínua, sendo um tunning de natureza quase obrigatória na maioria das instalações movê-lo para outro filesystem basta substituir seu diretório por um link simbólico para o ponto de montagem, onde o usuário **owner deve ser o postgres**.
 
-**Alguns cuidados devem ser observados, como as necessidades do PostgreSQL estar parado e da realização de cópia do conteúdo do atual pg_wall para o novo dispositivo - lembrando que pode implicar um alto risco de perda de dados se não for feita corretamente.**
+**Alguns cuidados devem ser observados, como as necessidades do PostgreSQL estar parado e da realização de cópia do conteúdo do atual pg_wal para o novo dispositivo - lembrando que pode implicar um alto risco de perda de dados se não for feita corretamente.**
 
 ## **Alterando a localização do pg_wal**
 
