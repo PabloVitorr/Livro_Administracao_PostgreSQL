@@ -1,28 +1,32 @@
 # **Arquivos de configuração**
 
+<br/>
+
 ## **postgresql.conf**<br/>
-O principal arquivo de configuração do PostgreSQL, normalmente localizado em **$PGDATA**. Esse arquivo prescreve o comportamento para o cluster inteiro, ou seja, não é possível configurar comportamentos diferentes em relação a cada banco de dados. É necessário ter em mente que a partir da versão 9.4 foi adicionado o **ALTER SYSTEM**, que permite alterar os valores de parâmetros sem modificar o postgresql.conf. Por isso é **recomendado a verificação dos valores do parâmetro do PostgreSQL seja sempre realizada pela view pg_settings**. Os parâmetros ali encontrados dividem-se em várias seções no arquivo:
+O principal arquivo de configuração do PostgreSQL, normalmente localizado em **$PGDATA**. Esse arquivo prescreve o comportamento para o cluster inteiro, ou seja, não é possível configurar comportamentos diferentes em relação a cada banco de dados. É necessário ter em mente que a partir da versão 9.4 foi adicionado o **ALTER SYSTEM**, que permite alterar os valores de parâmetros sem modificar o **postgresql.conf**. Por isso é **recomendado a verificação dos valores do parâmetro do PostgreSQL seja sempre realizada pela view pg_settings**. Os parâmetros ali encontrados dividem-se em várias seções no arquivo:
+
+<br/>
 
 ## **Seções do arquivo postgresql.conf (PostgreSQL14)**
 
-- **CONNECTIONS AND AUTHENTICATION**
-- **FILE LOCATIONS**
-- **RESOURCE USAGE (except WAL)**
-- **WRITE AHEAD LOG**
-- **REPLICATION**
-- **QUERY TUNING**
-- **ERROR REPORTING AND LOGGGING**
-- **PROCESS TITLE**
-- **RUNTIME STATISTICS**
-- **AUTOVACUUM PARAMETERS**
-- **CLIENT CONNECTION DEFAULTS**
-- **LOCK MANAGEMENT**
-- **VERSION/PLATAFORM COMPATIBILITY**
-- **ERROR HANDLING**
-- **CONFIG FILE INCLUDES**
-- **CUSTOMIZED OPTIONS**
+- CONNECTIONS AND AUTHENTICATION
+- FILE LOCATIONS
+- RESOURCE USAGE (except WAL)
+- WRITE AHEAD LOG
+- REPLICATIO
+- QUERY TUNING
+- ERROR REPORTING AND LOGGGING
+- PROCESS TITLE
+- RUNTIME STATISTICS
+- AUTOVACUUM PARAMETERS
+- CLIENT CONNECTION DEFAULTS
+- LOCK MANAGEMENT
+- VERSION/PLATAFORM COMPATIBILITY
+- ERROR HANDLING
+- CONFIG FILE INCLUDES
+- CUSTOMIZED OPTIONS
 
-**Das seções apresentadas temos algumas a serem observadas**
+### **Das seções apresentadas temos algumas a serem observadas**
 
 - **FILE LOCATIONS**<br/>
   Seção onde são definidos localização e nomes de arquivos, como **hba_file**, **ident_file**, **data_directory** entre outros.
@@ -44,22 +48,24 @@ O principal arquivo de configuração do PostgreSQL, normalmente localizado em *
   
   ![Seção WRITE-AHEAD LOG](./img/secao_write_ahead_log.png)
 
-**Analisando alguns parâmetros do postgresql.conf**
+### **Analisando alguns parâmetros do postgresql.conf**
 
 - **max_connection**<br/>
   Número máximo de conexões suportadas pelo cluster. O valor iniicial de max_connection é 100.
 
 - **work_mem**<br/>
-  O valor deve ser de até 8MB para servidores com até 32 GB de RAM, 16MB para servidores com até 64 GB de RAM. Se o max_connections for maior que 400, devemos dividir esse valor por 2. O work_men é o espaço utilizado para operações de bitmap, hash join e merge.
+  O valor deve ser de até 8MB para servidores com até 32 GB de RAM, 16MB para servidores com até 64 GB de RAM. Se o **max_connections** for maior que 400, devemos dividir esse valor por 2. O work_men é o espaço utilizado para operações de bitmap, hash join e merge.
 
 - **maintenance_work**<br/>
-  Esse parâmetro define o espaço usado pelo VACUUM e CREATE INDEX. O valor default é 64MB.
+  Esse parâmetro define o espaço usado pelo **VACUUM** e **CREATE INDEX**. O valor default é 64MB.
 
 - **seq_page_cost**<br/>
   Custo estimado de leitura de página em disco para páginas sequenciais, valor default 1.
 
 - **random_page_cost**<br/>
-  Custo estimado de leitura de página em disco para páginas não sequenciais, default 4 (quanto mais rápido o disco, ou o uso de SSD, menor pode ser o valor)
+  Custo estimado de leitura de página em disco para páginas não sequenciais, default 4 (quanto mais rápido o disco, ou o uso de SSD, menor pode ser o valor).
+
+<br/>
 
 ## **Alterando os valores dos parâmetros do cluster PostgreSQL**
 
@@ -95,16 +101,16 @@ SELECT name, context FROM pg_settings;
 
 ![Consulta auternativa utilizando a pg_settings](./img/saida_consulta_auternativa_pg_settings.png)
 
-**Os resultados obtidos na coluna *context* podem ser resumidos em:**
+### **Os resultados obtidos na coluna *context* podem ser resumidos em:**
 
 - **INTERNAL**<br/>
   Configurações realizadas em tempo de compilação, não podendo ser alteradas sem a recompilação do servidor.
 
 - **POSTMASTER**<br/>
-  É atualizado somente quando um reinício completo do servidor é realizado. Todas as configurações de memória enquadram-se nessa categoria
+  É atualizado somente quando um reinício completo do servidor é realizado. Todas as configurações de memória enquadram-se nessa categoria.
 
 - **SIGHUP**<br/>
-  Enviar ao servidor um sinal HUP fará com que ele recarregue o postgresql.conf, e quaisquer alterações feitas neste parâmetro serão imediatamente ativadas.
+  Enviar ao servidor um sinal HUP fará com que ele recarregue o **postgresql.conf**, e quaisquer alterações feitas neste parâmetro serão imediatamente ativadas.
 
 - **BACKEND**<br/>
   Semelhantes ao SIGHUP, executando-se pelo fato de que as alterações feitas não afetarão nenhuma sessão de back-end de database já executada, apenas novas sessões iniciadas depois disso sofrerão alterações. Ex: log_connections não pode ser retroativo, para registrar uma conexão ja feita. Somente novas conexões, feitas depois que a log_connections estiver ativa, serão registradas.
@@ -117,17 +123,20 @@ SELECT name, context FROM pg_settings;
 
 A partir da versão 9.4, foi introduzido o comando **ALTER SYSTEM**, que nos permite alterar parâmetros sem editar o **postgresql.conf**. Quando utilizamos esse comando no mesmo diretório em que se situa o arquivo **postgresql.conf** válido do cluster, é criado o arquivo **postgresql.auto.conf**, que não deve ser editado diretamente e tem a primazia de seu conteúdo em relação ao **postgresql.conf**, mais um motivo para evitar a verificação dos parâmetros do cluster pela leitura do **postgresql.conf** e utilizar a visualização view **pg_settings**. 
 
-Caso seja necessária  a localização dos arquivos, podemos utilizar o seguinte SQL:
+Caso seja necessária  a localização dos arquivos, podemos utilizar a seguinte consulta:
 
 ```sql
 SELECT name, setting FROM pg_settings WHERE category = 'File Locations';
 ```
 
-![Localização arquivos](./img/localizacao_arquivos.png)
+![Localização dos arquivos de coniguração](./img/localizacao_arquivos.png)
 
 Existem em **postgresql.org** várias referências de como calcular os parâmetros, mas, revendo a literatura, encontramos diversos profissionais que o fazem de forma empírica ou com ajustes - isso fica a critério do **DBA**. Lembramos que a natureza dos ajustes está muito relacionada à natureza do sistema (OLTPx, BI etc.).
 
+<br/>
+
 ## **pg_hba.conf**
+
 A autenticação no **cluster** é controlada por um arquivo de configuração tradicionalmente chamado **pg_hba.conf**, armazenado no diretório de dados do cluster **$PGDATA** (HBA - host-based autentication (autenticação baseada em host)). Um arquivo **pg_hba.conf** padrão é instalado quando o diretório de dados é inicializado pelo **initdb**.
 
 <br/>
@@ -156,7 +165,7 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
   Conexão usando **TCP/IP**, mas com comportamento oposto ao de **hostssl**. Apenas combina tentativas de conexão feitas através de **TCP/IP** que não usam **SSL**.
 
 - **Database**<br/>
-  Especifica quais databases o registro correspondente pode acessar. O valor **all** determina que qualquer database válido pode ser acessado. Multiplos nomes podem ser fornecidos separados por vírgula, pode ser criado tambem um arquivo separado com nomes dos databases onde o arquivo pode ser especificado antes do nome do arquivo com **@**
+  Especifica quais databases o registro correspondente pode acessar. O valor **all** determina que qualquer database válido pode ser acessado. Multiplos nomes podem ser fornecidos separados por vírgula, pode ser criado tambem um arquivo separado com nomes dos databases onde o arquivo pode ser especificado antes do nome do arquivo com **@**.
 
 - **User**<br/>
   Especifica quais nomes de usuário de database esse registro corresponde. O valor **all** refere-se a todos os usuários.
@@ -167,7 +176,7 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
 - **IP-adress e IP-mask**<br/>
   Estes dois campos podem ser usados como uma alternativa à notação de endereço IP/máscara. Em vez de indicar o comprimento da máscara, a máscara real é especificada em uma coluna separada.
 
-**Estes campos aplicam-se somente aos registros host, hostssl e hostnossl**
+### **Estes campos aplicam-se somente aos registros host, hostssl e hostnossl:**
 
 - **Auth-method**<br/>
   Especifica o **método** de **autenticação** a ser usado quando uma conexão corresponde a este registro.
@@ -176,7 +185,7 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
   Este método **permite conexões incondicionalmente**. Possibilita que qualquer pessoa conecte-se ao servidor SGBD PostgreSQL para entrar como qualquer usuário do PostgreSQL que deseje, sem a necessidade de uma senha ou outra autenticação.
 
 - **Reject**<br/> 
-  **Rejeita a conexão incondicionalmente**. Isso é útil para **“filtrar” determinados hosts de um grupo**; por exemplo uma linha de rejeição para bloquear um host específico, enquanto uma linha posterior permite que os hosts restantes de uma rede específica conectem-se;
+  **Rejeita a conexão incondicionalmente**. Isso é útil para **“filtrar” determinados hosts de um grupo**; por exemplo uma linha de rejeição para bloquear um host específico, enquanto uma linha posterior permite que os hosts restantes de uma rede específica conectem-se.
 
 - **MD5**<br/> 
   Exige que o cliente forneça uma senha criptografada **MD5** para autenticação.
@@ -196,7 +205,8 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
 - **Cert**<br/> 
   Realiza a autenticação usando certificados SSL do cliente.
 
-- **PAM**<br/> Realiza a autenticação usando o serviço de Módulos de Autenticação Plug-in (PAM) fornecido pelo sistema operacional.
+- **PAM**<br/> Realiza a autenticação usando o
+  serviço de Módulos de Autenticação Plug-in (PAM) fornecido pelo sistema operacional.
   
 - **Auth-options**<br/>
   Depois do campo de método de autenticação, pode(m) haver campo(s) de nome do formulário = valor que especifica opções para o método de autenticação. **Dessa forma, pela combinação dos elementos citados anteriormente, esse arquivo descreve quem pode, de onde se pode e como se pode fazer a autenticação (MD5, LDPA etc)**.
@@ -217,4 +227,10 @@ su - postgres
 
 <br/>
 
-[<<==](../capitulo_2/capitulo_2.md) |====| [Home](../README.md) |====| [==>>](../capitulo_4/capitulo_4.md)
+[<center>**Home**</center>](../README.md)
+
+[<center>**<<==**</center>](../capitulo_2/capitulo_2.md)
+
+[<center>**==>>**</center>](../capitulo_4/capitulo_4.md)
+
+<br/>
