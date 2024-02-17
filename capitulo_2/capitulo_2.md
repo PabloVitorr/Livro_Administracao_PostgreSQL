@@ -6,7 +6,7 @@
 
 Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em sua versão **9.4**. Na versão **10**, tenciona-se alterar a denominação da localização **pg_xlog** para **pg_wal** além de outras mudanças até chegarmos a **versão 14 utilizada para acompanhamento do livro**.
 
-![Imagem da estrutura física do PostgreSQL9.4](./img/estrutura_fisica_postgresql.svg "Estrutura física do PostgreSQL9.4")
+![Estrutura física do PostgreSQL9.4](./img/estrutura_fisica_postgresql.svg "Estrutura física do PostgreSQL9.4")
 
 ### **No nível mais alto da hierarquia do PostgreSQL, temos os arquivos de configuração, sendo eles:**
 
@@ -21,7 +21,7 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em
 
 ### **Estrutura do diretório data no Postgresql14 em uma instalação RedHat CentOS:**
 
-![Imagem do onteúdo contido no diretório data](./img/diretorio.png "Conteúdo contido no diretório data'")
+![Conteúdo contido no diretório data](./img/diretorio.png "Conteúdo contido no diretório data'")
 
 ### **Breve descrição das principais localizações e arquivos:**
 
@@ -35,7 +35,7 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em
   SELECT oid, datname FROM pg_database;
   ```
 
-  ![Imagem com retorno da onsulta do catalogo pg_database](./img/subdiretorios_bases.png "Relação de subdiretórios de cada base")
+  ![Retorno da onsulta do catalogo pg_database](./img/subdiretorios_bases.png "Relação de subdiretórios de cada base")
 
 - **global**<br/> 
   Contém arquivos com dados dos catálogos (pg_database, pg_class...) e são visíveis globalmente, de todas as bases.
@@ -92,7 +92,7 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em
 
 ## **Estrutura de processos do PostgreSQL9.4**
 
-![Imagem da estrutura de Processos do PostgreSQL9.4](./img/estrutura_de_processos.svg "Estrutura de Processos PostgreSQL9.4")
+![Estrutura de Processos do PostgreSQL9.4](./img/estrutura_de_processos.svg "Estrutura de Processos PostgreSQL9.4")
 
 ### **Podemos observar esses processos com o comando *ps* (Postgresql14):**
 
@@ -100,7 +100,7 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em
 ps auxww | grep ^postgres
 ```
 
-![Imagem com o retorno do comando ps](./img/saida_ps.png)
+![Retorno do comando ps](./img/saida_ps.png)
 
 - **Logger Process** <br/>
   Coleta as informações do servidor para gravação em arquivo de logs, sendo tabém responsável por apagar os registros. Configuravel em **postgresql.conf**. As informações podem ser tanto sobre o funcionamento normal do servidor inicio/parada, checkpoint, acessos etc, quanto sobre erros, no servidor ou no acesso a ele, incluindo instruções SQL.
@@ -133,7 +133,7 @@ Nessa estrutura, um processo deve solicitar explicitamente uma área de memória
 
 A área da **SHARED MEMORY** utilizada pelo PostgreSQL divide-se em duas estruturas, **WAL BUFFER** e **SHARED BUFFER**:
 
-![Imagem com a estrutura de Memória do PostgreSQL](./img/estrutura_de_memoria_do_postgresql.svg "Estrutura de memória PostgreSQL")
+![Estrutura de Memória do PostgreSQL](./img/estrutura_de_memoria_do_postgresql.svg "Estrutura de memória PostgreSQL")
 
 - **WALL BUFFER**<br/>
   Armazena temporariamente, antes de salvá-los em armazenamento persistente (como HD, SSD etc), os vetores de alterações realizadas sendo estes **inserts**, **updates**, **deletes**.
@@ -160,10 +160,6 @@ O PostgreSQL não desfaz as alterações nas linhas do database quando uma trans
 
 <br/>
 
-[<center>**Home**</center>](../README.md)
-
-[<center>**<<==**</center>](../capitulo_1/capitulo_1.md)
-
-[<center>**==>>**</center>](../capitulo_3/capitulo_3.md)
+[**<<==**](../capitulo_1/capitulo_1.md)** |====| **[**Home**](../README.md)** |====| **[**==>>**](../capitulo_3/capitulo_3.md)
 
 <br/>

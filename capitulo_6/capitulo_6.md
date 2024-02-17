@@ -1,12 +1,14 @@
 # **Criando e organizando databases**
 
+<br/>
+
 ## **Base de dados (databases)**
 
 São as maiores entidades lógicas do **cluster PostgreSQL**; todas as demais entidades lógicas estarão contidas nos **databases** . **O conceito de cluster (agrupamento) no PostgreSQL dá-se pelo fato deste conter diversos databases na mesma máquina**.
 
 Ao contrário da **tablespace**, que é uma estrutura **física**, o **database é uma estrutura lógica que pode estar em uma ou várias tablespaces**.
 
-A criação de um database deve ser realizada por um superuser, com permissão para tanto, com o comando:
+A criação de um database deve ser realizada por um **superuser**, com permissão para tanto, com o comando:
 
 ```sql
 CREATE DATABASE <name>;
@@ -39,7 +41,7 @@ CREATE DATABASE name
 
 Os schemas **são subdivisões lógicas dos databases, similares aos diretórios**. Não podem ser alinhadas, também não é possível ter schemas dentro de schemas. Sua finalidade é separar objetos de aplicações diferentes ou de natureza diversa, **com o intuito de melhorar a organização da estrutura do database**.
 
-**Comando para criação de um schema**
+### **Comando para criação de um schema**
 
 ```sql
 CREATE SCHEMA <name>;
@@ -51,7 +53,7 @@ O schema padrão dos databases é o **public** . Ao criar um schema, necessitamo
 SET search_path = '<name_schema>';
 ```
 
-**É possível realizar essa configuração em vários níveis**
+### **É possível realizar essa configuração em vários níveis**
 
 - **Nível do cluster**<br/>
   ```sql
@@ -85,19 +87,21 @@ SET search_path = '<name_schema>';
   ```
   ![Set search_path](./img/consulta_set_search_path.png "Consulta setando search path")
 
-- **Configurando postgresql.conf, através do parâmetro search_path**
+- **Configurando postgresql.conf, através do search_path**
 
-  Neste exemplo foi utilizado a clausula **ALTER SYSTEM** mensionada nos capítulos iniciais.
+  Neste exemplo foi utilizado o **ALTER SYSTEM** mensionada nos capítulos iniciais.
 
-  ![Cláusula ALTER SYSTEM](./img/clausula_alter_system.png "Alterando parâmetro com a cláusula ALTER SYSTEM")
+  ![ALTER SYSTEM](./img/clausula_alter_system.png "Alterando parâmetro com ALTER SYSTEM")
 
   **Consultando novemente após alteração:**
 
-  ![Pós Cláusula ALTER SYSTEM](./img/consulta_pos_alter_system.png "Consulta posterior alteração do parâmetro search_path com a cláusula ALTER SYSTEM")
+  ![Pós ALTER SYSTEM](./img/consulta_pos_alter_system.png "Consulta posterior alteração do parâmetro search_path com ALTER SYSTEM")
+
+<br/>
 
 ## **Índices**
 
-Índices são estruturas que podem auxiliar a pesquisa e localização de dados, diminuindo o tempo de busca, encontrando as páginas onde os dados procurados estão situados, funcionando como ponteiro para uma localização.
+Índices são estruturas que podem auxiliar a pesquisa e localização de dados, **diminuindo o tempo de busca**, encontrando as páginas onde os dados procurados estão situados, funcionando como ponteiro para uma localização.
 
 O padrão do PostgreSQL é criar índices do tipo B-tree (**binary tree - árvore binária**). Sua criação pode ser realizada com o comando:
 
@@ -141,9 +145,11 @@ REINDEX[(VERBOSE)]{INDEX|TABLE|SCHEMA|DATABASE|SYSTEM}name
 
 Contudo, esse procedimento produz **lock** de tabela durante sua execução. Existe ainda um utilitário **reindexdb** executado diretamente pelo sistema operacional.
 
+<br/>
+
 ## **Roles**
 
-O PostgreSQL tem um sistema de roles em que usuários e agrupamentos de privilégios são, na verdade, roles.
+O PostgreSQL tem um sistema de roles em que usuários e agrupamentos de privilégios são na verdade, roles.
 
 O PostgreSQL gerencia permissões de acesso ao banco de dados usando o conceito de roles. Uma role pode ser considerada como um usuário do database ou um grupo de usuários, dependendo de como a role é configurada. As roles podem possuir objetos (por exemplo, tabelas) e podem atribuir privilégios sobre esses objetos e a outras roles para controlar quem tem acesso a quais objetos. O conceito de roles integra os conceitos de **“usuários”** e **“grupos”**.
 
@@ -192,4 +198,4 @@ REVOKE[PRIVILEGIOS]ON[OBJETO]FROM[ROLE];
 
 <br/>
 
-[<<==](../capitulo_5/capitulo_5.md) |====| [Home](../README.md) |====| [==>>](../capitulo_7/capitulo_7.md)
+[**<<==**](../capitulo_5/capitulo_5.md)** |====| **[**Home**](../README.md)** |====| **[**==>>**](../capitulo_7/capitulo_7.md)

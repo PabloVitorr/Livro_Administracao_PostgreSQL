@@ -1,5 +1,7 @@
 # **Gerenciando o cluster PostgreSQL**
 
+<br/>
+
 ## **Utilitário *pg_ctl***
 
 **pg_ctl** é um utilitário para **inicializar**, **iniciar**, **parar** ou **controlar** um **servidor PostgreSQL**.
@@ -12,7 +14,7 @@ pg_ctl --help
 
 Caso o mesmo não esteja funcionando, talvez seja necessário criar a variável 
 
-**Tratativa para contornar**
+### **Tratativa para contornar**
 
 - Crie um arquivo em **/etc/profile.d/pgsql.sh**
 - Adicione as seguintes informações e salve o arquivo
@@ -35,6 +37,8 @@ Caso o mesmo não esteja funcionando, talvez seja necessário criar a variável
   echo $PATH
   ```
 
+<br/>
+
 ## **Inicialização (startup)**
 
 O **startup** e **shutdown** do cluster PostgreSQL são realizados com o utilitário do **SGBD** chamado **pg_ctl**. Sua sintaxe básica é:
@@ -51,15 +55,15 @@ Observe o comando a seguir:
 pg_ctl start -D $PGDATA
 ```
 
-Ao executa-lo, os processos do cluster PostgreSQL realizarão a leitura dos arquivos de inicialização **postgresql.conf** e **postgresql.auto.conf**, se houver, e tentarão levantar o cluster em memória, inicializando-o. Caso não seja encontrado o arquivo **postgresql.conf**, uma mensagem de erro será gerada, mas a priori nenhum log padrão será criado, a menos que seja usada a opção **-l** (log filename):
+Ao executa-lo, os processos do cluster PostgreSQL realizarão a leitura dos arquivos de inicialização **postgresql.conf** e **postgresql.auto.conf**, se houver, e tentarão levantar o cluster em memória, inicializando-o. Caso não seja encontrado o arquivo **postgresql.conf**, uma mensagem de erro será gerada, **mas a priori nenhum log padrão será criado, a menos que seja usada a opção -l (log filename)**:
 
 ```bash
 pg_ctl start -D $PGDATA -l /var/lib/pgsql/14/data/log/log.log
 ```
 
-Depois disso, o comando verifica as permissões; por exemplo, caso sejam alteradas no diretório **data**, abortará o processo e informará a permissão correta. Na sequência, o comando tentará o arquivo pg_hba.conf; caso não seja encontrado, ou contenha algum erro grave, o cluster enviará uma mensagem de erro e gravará no arquivo de log, efetuando desligamento em seguida.
+Depois disso, o comando verifica as permissões; por exemplo, caso sejam alteradas no diretório **data**, abortará o processo e informará a permissão correta. Na sequência, o comando tentará o arquivo **pg_hba.conf**, caso não seja encontrado, ou contenha algum erro grave, o cluster **enviará uma mensagem de erro e gravará no arquivo de log, efetuando desligamento em seguida**.
 
-**Realizando tentativa de *start* com o cluster ja iniciado armazenando retorno de tentativa em arquivo de log**
+**Realizando tentativa de *start* com o cluster ja iniciado armazenando retorno de tentativa em arquivo de log**:
 
 ```bash
 pg_ctl start -D $PGDATA -l /var/lib/pgsql/14/data/log/log.log
@@ -71,13 +75,15 @@ pg_ctl start -D $PGDATA -l /var/lib/pgsql/14/data/log/log.log
 
 ![Arquivo de log](./img/retorno_start_log_2.png "Arquivo de log")
 
+<br/>
+
 ## **Desligamento (shutdown)**
 
 ```bash
 pg_ctl stop [-D datadir][-m s[mart]|f[ast]|i[mmediate]]
 ```
 
-**Os modos de shutdown (stop) disponíveis são: SMART, FAST, IMMEDIATE:**
+**Os modos de shutdown (*stop*) disponíveis são: SMART, FAST, IMMEDIATE**:
 
 - **Smart**<br/>
   É a forma padrão (até a versão 9.4) e mais **segura**. Nenhuma nova conexão será permitida, mas todas as conexões atuais poderão ser concluídas normalmente.
@@ -86,7 +92,7 @@ pg_ctl stop [-D datadir][-m s[mart]|f[ast]|i[mmediate]]
   pg_ctl stop -D $PGDATA -m smart
   ```
 
-  Apos parar o serviço é possível validar o *status* com o comando:
+  Após parar o serviço é possível validar o *status* com o comando:
 
   ```bash
   pg_ctl status -D $PGDATA
@@ -98,27 +104,29 @@ pg_ctl stop [-D datadir][-m s[mart]|f[ast]|i[mmediate]]
   ```
 
 - **Fast**<br/>
-  Padrão a partir da versão 9.5. Nenhuma nova conexão será permitida, mas todas as conexões em andamento serão concluídas, inclusive os backups. As transações pendentes sofrerão um ROLLBACK.
+  Nenhuma nova conexão será permitida, mas todas as conexões em andamento serão concluídas, inclusive os backups. As transações pendentes sofrerão um ROLLBACK.
 
 - **Imediate**<br/>
-  Encerrará todos os processos do servidor abruptamente. Considerada uma forma **extrema** de desligamento, **equivale ao desligamento do host abruptamente**
+  **Encerrará** todos os processos do servidor abruptamente. Considerada uma forma **extrema** de desligamento, **equivale ao desligamento do host abruptamente**
 
-Os modos **smart** e **fast** são considerados formas de **shutdown** **“limpas”**, **“consistentes”** ou **“regulares”**. A forma imediate é cnsiderada **“irregular”** e pode deixar os databases em um estado não consistente que necessitará de recuperação no modo de inicialização. 
+Os modos **smart** e **fast** são considerados formas de **shutdown** **“limpas”**, **“consistentes”** ou **“regulares”**. A forma **imediate** é cnsiderada **“irregular”** e pode deixar os databases em um estado não consistente que necessitará de recuperação no modo de inicialização.
+
+<br/>
 
 ## **Inicialização (startup) e desligamento (shutdown) por customização do sistema operacional e/ou de distribuição**
 
-Distribuições Red Hat (RH), Oracle, CentOS e similares
+**Distribuições Red Hat (RH), Oracle, CentOS e similares**
 
 ```bash
 sudo service postgresql-x.y[start|stop|restart|reload|status|enable|disable]
 ```
 
-## **Inicialização (startup)**
+### **Inicialização (startup)**
   ```bash
   sudo service postgresql-14 start
   ```
 
-Caso apresente o seguinte erro ao tentar executar **start**, **stop**, **status** etc... Pode ser por que o **usuario** em questão nao esta descrito no arquivo **/etc/sudoers**
+Caso apresente o seguinte erro ao tentar executar **start**, **stop**, **status** etc... Pode ser por que o **usuario** em questão nao está descrito no arquivo **/etc/sudoers**
 
 ![Erro comando sudo service postgresql](./img/erro_sudo_service_1.png "Mensagem de erro")
 
@@ -145,6 +153,8 @@ sudo vim /var/lib/pgsql/14/data/postmaster.pid
 ```
 
 ![postmaster.pid](./img/postmaster.pid.png "Arquivo postmaster.pid")
+
+<br/>
 
 ## **Parando o cluster com o comando kill**
 
@@ -204,4 +214,4 @@ Embora devamos dar preferência ao gerenciamento do cluster por scripts integrad
 
 <br/>
 
-[<<==](../capitulo_3/capitulo_3.md) |====| [Home](../README.md) |====| [==>>](../capitulo_5/capitulo_5.md)
+[**<<==**](../capitulo_3/capitulo_3.md)** |====| **[**Home**](../README.md)** |====| **[**==>>**](../capitulo_5/capitulo_5.md)

@@ -1,5 +1,7 @@
 # **Volumetria e disponibilidade**
 
+<br/>
+
 Ao abordar monitoramento no PostgreSQL geralmente são referidos dois tipos que são eles **contínuo** e **pontual**.
 
 ## **Monitoramento pontual**
@@ -67,4 +69,4 @@ Após encerramento ao tentar dar continuidade no pgAdmin4 o mesmo apresentou avi
 
 <br/>
 
-[<<==](../capitulo_6/capitulo_6.md) |====| [Home](../README.md) |====| [==>>](../capitulo_8/capitulo_8.md)
+[**<<==**](../capitulo_6/capitulo_6.md)** |====| **[**Home**](../README.md)** |====| **[**==>>**](../capitulo_8/capitulo_8.md)
