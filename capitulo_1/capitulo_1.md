@@ -24,7 +24,7 @@ timedatectl set-timezone America/Sao_Paulo
 ### **Desabilitando *firewall* e o *Selix* (conjunto de restrições de segurança extra em cima das ferramentas de segurança normais do linux)**
 
 - ### **Acesse o usuário root:**
-- 
+
   ```bash
   su
   ```
@@ -160,6 +160,6 @@ Acessando arquivo:
 
 <br/>
 
- [**Home**](../README.md) |====| [**==>>**](../capitulo_2/capitulo_2..md)
+ [**Home**](../README.md) |====| [**==>>**](../capitulo_2/capitulo_2.md)
 
 <br/>
