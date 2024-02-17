@@ -1,4 +1,4 @@
-# **Instalaçõe e orientações sobre suporte e versões**
+# **Instalações e orientações sobre suporte e versões**
 
 <br/>
 
