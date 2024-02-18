@@ -160,6 +160,6 @@ O PostgreSQL não desfaz as alterações nas linhas do database quando uma trans
 
 <br/>
 
-[**<<==**](../capitulo_1/capitulo_1.md)** |====| **[**Home**](../README.md)** |====| **[**==>>**](../capitulo_3/capitulo_3.md)
+[**<<==**](../capitulo_1/capitulo_1.md) |====| [**Home**](../README.md) |====| [**==>>**](../capitulo_3/capitulo_3.md)
 
 <br/>

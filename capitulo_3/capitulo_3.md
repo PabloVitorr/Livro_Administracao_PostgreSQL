@@ -227,6 +227,6 @@ su - postgres
 
 <br/>
 
-[**<<==**](../capitulo_2/capitulo_2.md)** |====| **[**Home**](../README.md)** |====| **[**==>>**](../capitulo_4/capitulo_4.md)
+[**<<==**](../capitulo_2/capitulo_2.md) |====| [**Home**](../README.md) |====| [**==>>**](../capitulo_4/capitulo_4.md)
 
 <br/>

@@ -63,7 +63,7 @@ Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versã
   pg_ctl -D $PGDATA start
   ```
 
-  **O serviço do PostgreSQL não iniciou, após análise faoram identificadas divergências na criação do diretório** ⚠️ 
+  **O serviço do PostgreSQL não iniciou, após análise foram identificadas divergências na criação do diretório** ⚠️ 
 
   ![Divergencia diretorio](./img/divergencia_diretorio_1.png "Diretório data")
 
@@ -86,7 +86,7 @@ Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versã
   ```bash
   rm pg_wal
   ```
-- **Criado novamente**
+- **Criando novamente**
 
   ```bash
   ln -s ~/14/data/temp_pg_wal/ pg_wal
@@ -332,4 +332,4 @@ No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/da
 
 <br/>
 
-[**<<==**](../capitulo_4/capitulo_4.md) **|====|** [**Home**](../README.md) **|====|** [**==>>**](../capitulo_6/capitulo_6.md)
+[**<<==**](../capitulo_4/capitulo_4.md) |====| [**Home**](../README.md) |====| [**==>>**](../capitulo_6/capitulo_6.md)

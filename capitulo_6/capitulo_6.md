@@ -198,4 +198,4 @@ REVOKE[PRIVILEGIOS]ON[OBJETO]FROM[ROLE];
 
 <br/>
 
-[**<<==**](../capitulo_5/capitulo_5.md)** |====| **[**Home**](../README.md)** |====| **[**==>>**](../capitulo_7/capitulo_7.md)
+[**<<==**](../capitulo_5/capitulo_5.md) |====| [**Home**](../README.md) |====| [**==>>**](../capitulo_7/capitulo_7.md)
