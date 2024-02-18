@@ -185,8 +185,8 @@ SELECT
   a.query AS bloqueada_query,
   to_char(age(now(), a.query_start),'HH24h:MIm:SSs') AS duracao_bloqueio
 FROM pg_catalog.pg_locks bl
-  JOIN pg_catalog.pg_stat_activity a ON bl.pid = a.pid
-  JOIN pg_catalog.pg_locks kl ON bl.locktype = kl.locktype
+JOIN pg_catalog.pg_stat_activity a ON bl.pid = a.pid
+JOIN pg_catalog.pg_locks kl ON bl.locktype = kl.locktype
   AND bl.database IS NOT DISTINCT FROM kl.database
   AND bl.relation IS NOT DISTINCT FROM kl.relation
   AND bl.page IS NOT DISTINCT FROM kl.page
@@ -207,29 +207,29 @@ FROM pg_catalog.pg_locks bl
 ```sql
 CREATE VIEW view_bloqueios AS 
 SELECT
-	kl.pid AS bloqueador_pid,
-	ka.usename AS bloqueador_user,
-	ka.query AS bloqueador_query,
-	bl.pid AS bloqueada_pid,
-	a.usename AS bloqueada_user,
-	a.query AS bloqueada_query,
-	to_char(age(now(), a.query_start),'HH24h:MIm:SSs') AS duracao_bloqueio
+  kl.pid AS bloqueador_pid,
+  ka.usename AS bloqueador_user,
+  ka.query AS bloqueador_query,
+  bl.pid AS bloqueada_pid,
+  a.usename AS bloqueada_user,
+  a.query AS bloqueada_query,
+  to_char(age(now(), a.query_start),'HH24h:MIm:SSs') AS duracao_bloqueio
 FROM pg_catalog.pg_locks bl
-	JOIN pg_catalog.pg_stat_activity a ON bl.pid = a.pid
-	JOIN pg_catalog.pg_locks kl ON bl.locktype = kl.locktype
-	AND bl.database IS NOT DISTINCT FROM kl.database
-	AND bl.relation IS NOT DISTINCT FROM kl.relation
-	AND bl.page IS NOT DISTINCT FROM kl.page
-	AND bl.tuple IS NOT DISTINCT FROM kl.tuple
-	AND bl.virtualxid IS NOT DISTINCT FROM kl.virtualxid
-	AND bl.transactionid IS NOT DISTINCT FROM kl.transactionid
-	AND bl.classid IS NOT DISTINCT FROM kl.classid
-	AND bl.objid IS NOT DISTINCT FROM kl.objid
-	AND bl.objsubid IS NOT DISTINCT FROM kl.objsubid
-	AND bl.pid <> kl.pid
-	JOIN pg_catalog.pg_stat_activity ka ON kl.pid = ka.pid
-	WHERE kl.granted AND NOT bl.granted
-	ORDER BY a.query_start;
+JOIN pg_catalog.pg_stat_activity a ON bl.pid = a.pid
+JOIN pg_catalog.pg_locks kl ON bl.locktype = kl.locktype
+  AND bl.database IS NOT DISTINCT FROM kl.database
+  AND bl.relation IS NOT DISTINCT FROM kl.relation
+  AND bl.page IS NOT DISTINCT FROM kl.page
+  AND bl.tuple IS NOT DISTINCT FROM kl.tuple
+  AND bl.virtualxid IS NOT DISTINCT FROM kl.virtualxid
+  AND bl.transactionid IS NOT DISTINCT FROM kl.transactionid
+  AND bl.classid IS NOT DISTINCT FROM kl.classid
+  AND bl.objid IS NOT DISTINCT FROM kl.objid
+  AND bl.objsubid IS NOT DISTINCT FROM kl.objsubid
+  AND bl.pid <> kl.pid
+  JOIN pg_catalog.pg_stat_activity ka ON kl.pid = ka.pid
+  WHERE kl.granted AND NOT bl.granted
+  ORDER BY a.query_start;
 ```
 
 Ao observar esse bloqueios, podemos ter um exemplo em que dezenas de sessões são bloqueadas por uma única outra e em que, ao eliminar a bloqueada primária, conseguimos liberar automaticamente todas as demais da fila de bloqueios.
