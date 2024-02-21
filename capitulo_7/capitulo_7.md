@@ -234,7 +234,7 @@ JOIN pg_catalog.pg_locks kl ON bl.locktype = kl.locktype
 
 Ao observar esse bloqueios, podemos ter um exemplo em que dezenas de sessões são bloqueadas por uma única outra e em que, ao eliminar a bloqueada primária, conseguimos liberar automaticamente todas as demais da fila de bloqueios.
 
-
+<br/>
 
 ## **Monitoramento de transações two-phase commit (2PC)**
 
@@ -295,6 +295,99 @@ Ao usar transações distribuídas, ou similares, podemos acabar em uma situaç�
   ```
 
   E em nova consulta seria validado eliminação.
+
+<br/>
+
+## **Monitorando tabelas e índices bloat**
+
+Devido ao ***Multiversion Concurrency Control (MVCC)***, uma tabela poderá conter muitas versões antigas de linhas caso tais versões não possam ser removidas em tempo hábil. É possível que, mesmo depois que as versões antigas das tuplas sejam excluídas, a tabela permaneça com o tamanho grande recentemente adquirido, graças às linhas das versões obtidas.
+
+### **Exemplo para validar tamanho da tabela**
+
+```sql
+SELECT pg_relation_size(relid) AS tablesize, schemaname, relname, n_live_tup FROM pg_stat_user_tables WHERE relname = <tablename>;
+```
+
+Os índices do tipo ***B-tree*** podem deixar grandes quantidades de folhas vazias em exclusões, onde são chamados de ***bloat***(inchados).
+
+Umas das maneiras de monitorar o quão inchado o índice está é observando o tamanho deste em relação ao da tabela.
+
+```sql
+SELECT
+  nspname,
+  relname,
+  round(100*pg_relation_size(indexrelid)/pg_relation_size(indrelid))/100 AS index_ratio,
+	pg_size_pretty(pg_relation_size(indexrelid)) AS index_size,
+  pg_size_pretty(pg_relation_size(indrelid)) AS table_size
+FROM pg_index I
+LEFT JOIN pg_class C ON (C.oid = I.indexrelid)
+LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+  WHERE nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast') AND C.relkind = 'i'
+  AND pg_relation_size(indrelid) > 0
+  ORDER BY index_ratio;
+```
+
+<br/>
+
+## **Medição da eficiência do índice em relação**
+
+A melhor forma de realmente entender como os índices funcionam é salvando o número de leituras de disco, mostrando quantos blocos foram de fato usados para satisfazer essa consulta. A ***view*** a seguir combina as duas fontes principais para estatísticas de tabelas relevantes, ***pg_stat_user_tables*** e ***pg_statio_user_tables***:
+
+```sql
+CREATE OR REPLACE VIEW table_stats AS
+SELECT 
+  stat.relname AS relname,
+  seq_scan,
+  seq_tup_read,
+  idx_scan
+FROM pg_stat_user_tables stat
+RIGHT JOIN pg_statio_user_tables statio ON stat.relid = statio.relid;
+```
+
+<br/>
+
+## **Monitorando o desempenho em tempo real com *PG_STAT_STATEMENTS***
+
+Análise em tempo real das consultas. Esta adiciona a capacidade de rastreamento de estatísticas de execução de consultas efetuadas em um banco de dados, incluindo número de chamadas, tempo total de execução, número total de linhas retornadas, bem como informações internas sobre memória e acesso de ***I/O***.
+
+O módulo ***pg_stat_statments*** está disponível no módulo ***contrib*** do PostgreSQL. A extensão deve ser instalada como superusuário nas bases de dados desejadas. Ela instalará o conjunto de views ***pg_stat_statements*** e a função ***pg_stat_statements_reset()***.
+
+- **Instalação da EXTENSION, módulo pg_stat_statements:**
+
+  ```sql
+  CREATE EXTENSION pg_stat_statements;
+  ```
+![Comando criação de extension pg_stat_statements](./img/create_pg_stat_statements.png "Comando para criação da EXTENSION pg_stat_statements")
+
+### **Após instalação da *extension* realizar as seguintes configurações no *postgresql.conf***
+
+**Obs:** Neste caso foi realizada configuração utilizando a ***ALTER SYSTEM***
+
+- ```
+  shared_preload_libraries = ‘pg_stat_statements'
+  ```
+
+  ![Configuração shared_preload_libraries](./img/configuracao_shared_preload_libraries.png "Alterando configuração shared_preload_libraries")
+
+- ```
+  pg_stat_statements.max = 10000
+  ```
+
+  ```
+  pg_stat_statements.track = all
+  ```
+
+  ![Configuração pg_stat_statements.max e .track](./img/configuracao_pg_stat_statements_max_track.png "Alterando configuração pg_stat_statements.max e pg_stat_statements.track")
+
+Após conclusão realizar o restart do cluster e já é possível verificar as queries com tempo de execução mais alto e o número de vezes em que foram executadas desde que o cluster está no modo ativo:
+
+```sql
+SELECT query, total_exec_time/calls AS avg, calls FROM pg_stat_statements ORDER BY 2 DESC;
+```
+
+![Consulta tempo execução query](./img/consulta_tempo_execucao_query.png)
+
+
 
 <br/>
 
