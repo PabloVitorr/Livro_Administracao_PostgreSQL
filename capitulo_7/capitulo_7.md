@@ -242,7 +242,7 @@ Ao usar transações distribuídas, ou similares, podemos acabar em uma situaç�
 
 **Para ilustrar, sera gerado um bloqueio do tipo mencionado**
 
-- **Conectando ao database *hardwork* **
+- **Conectando ao database *hardwork***
   
   ```bash
   su - postgres
@@ -357,7 +357,7 @@ O módulo ***pg_stat_statments*** está disponível no módulo ***contrib*** do 
   ```sql
   CREATE EXTENSION pg_stat_statements;
   ```
-![Comando criação de extension pg_stat_statements](./img/create_pg_stat_statements.png "Comando para criação da EXTENSION pg_stat_statements")
+  ![Comando criação de extension pg_stat_statements](./img/create_pg_stat_statements.png "Comando para criação da EXTENSION pg_stat_statements")
 
 ### **Após instalação da *extension* realizar as seguintes configurações no *postgresql.conf***
 
