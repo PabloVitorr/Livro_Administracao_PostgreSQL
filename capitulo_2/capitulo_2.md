@@ -4,22 +4,22 @@
 
 ## **Estrutura física do PostgreSQL9.4**
 
-Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em sua versão **9.4**. Na versão **10**, tenciona-se alterar a denominação da localização **pg_xlog** para **pg_wal** além de outras mudanças até chegarmos a **versão 14 utilizada para acompanhamento do livro**.
+Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** versão **9.4**. Posteriormente foi alterada a denominação da localização **pg_xlog** para **pg_wal** além de outras mudanças até chegarmos a **versão 14 utilizada para acompanhamento do livro**.
 
 ![Estrutura física do PostgreSQL9.4](./img/estrutura_fisica_postgresql.svg "Estrutura física do PostgreSQL9.4")
 
 ### **No nível mais alto da hierarquia do PostgreSQL, temos os arquivos de configuração, sendo eles:**
 
 - **pg_hba.conf**<br/>
-  Este é o arquivo de configuração para autenticação de usuários. Podemos entender o seu funcionamento como um arquivo **ACL**. Relaciona os **usuários** as **bases de dados**, tipo de **autenticação** e **máscara de rede**.
+  Arquivo de configuração para autenticação de usuários. Podemos entender o seu funcionamento como um arquivo ***ACL***. Relaciona os **usuários** as **bases de dados**, tipo de **autenticação** e **máscara de rede**.
 
 - **pg_ident.conf**<br/>
-  Usado pelo esquema de autenticação **ident** de **usuários** do **sistema operacional** com **PostgreSQL**, mapeia **usuários** de **sistema** e de **base de dados**, estando por padrão vazio.
+  Usado pelo esquema de autenticação ***ident*** de **usuários** do **sistema operacional** com **PostgreSQL**, mapeia **usuários** de **sistema** e de **base de dados**, estando por padrão vazio.
 
 - **postgresql.conf**<br/>
-   Principal arquivo de configuração do PostgreSQL. Sua lista de parâmetros controlam os aspectos de funcionamento do **cluster**. 
+   Principal arquivo de configuração do PostgreSQL. Sua lista de parâmetros controlam os aspectos de funcionamento do ***cluster***. 
 
-### **Estrutura do diretório data no Postgresql14 em uma instalação RedHat CentOS:**
+### **Estrutura do diretório *data* no Postgresql14 em uma instalação RedHat CentOS:**
 
 ![Conteúdo contido no diretório data](./img/diretorio.png "Conteúdo contido no diretório data'")
 
@@ -68,13 +68,13 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em
   Subdiretório que contem os estados para transações do tipo **prepared transactions**.
 
 - **pg_xlog (a partir da versao 10 chamado de *pg_wal* )**<br/>
-  Subdiretorio que contem os arquivos de **wal** (Write Ahead Log).
+  Subdiretorio que contem os arquivos de ***wal*** (Write Ahead Log).
 
 - **postmaster.opts**<br/>
   Arquivo utilizado para gravar as opções de linha de comando em que o servidor foi iniciado pela ultima vez.
 
 - **postmaster.pid**<br/>
-  Arquivo que armazena as informações **PID** (postmaster process ID) atual caminho do diretório de dados do cluster, carimbo de data/hora de inicio do postmaster, número da porta, caminho do diretório de soquete do domínio Unix, first listen_address válido e ID de segmento de memória compartilhada. **OBS: Esse arquivo não esta presente após encerramento do servidor**.
+  Arquivo que armazena as informações ***PID*** (postmaster process ID) atual caminho do diretório de dados do cluster, carimbo de data/hora de inicio do postmaster, número da porta, caminho do diretório de soquete do domínio Unix, first listen_address válido e ID de segmento de memória compartilhada. **OBS: Esse arquivo não esta presente após encerramento do servidor**.
 
 - **postgresql.conf**<br/>
   Principal arquivo de configuração do cluster.
@@ -94,7 +94,7 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** em
 
 ![Estrutura de Processos do PostgreSQL9.4](./img/estrutura_de_processos.svg "Estrutura de Processos PostgreSQL9.4")
 
-### **Podemos observar esses processos com o comando *ps* (Postgresql14):**
+### **E possivel observar esses processos com o comando *ps* (Postgresql14):**
 
 ```bash
 ps auxww | grep ^postgres
@@ -103,7 +103,7 @@ ps auxww | grep ^postgres
 ![Retorno do comando ps](./img/saida_ps.png)
 
 - **Logger Process** <br/>
-  Coleta as informações do servidor para gravação em arquivo de logs, sendo tabém responsável por apagar os registros. Configuravel em **postgresql.conf**. As informações podem ser tanto sobre o funcionamento normal do servidor inicio/parada, checkpoint, acessos etc, quanto sobre erros, no servidor ou no acesso a ele, incluindo instruções SQL.
+  Coleta as informações do servidor para gravação em arquivo de logs, sendo tabém responsável por apagar os registros. Configuravel em ***postgresql.conf***. As informações podem ser tanto sobre o funcionamento normal do servidor inicio/parada, checkpoint, acessos etc, quanto sobre erros, no servidor ou no acesso a ele, incluindo instruções SQL.
 
 - **Checkpointer Process** <br/>
   Executa, no PostgreSQL, os pontos de verificação, sinalizando que os dados no **WAL** devem ser descarregados e salvos no armazenamento persistente.
@@ -127,16 +127,16 @@ ps auxww | grep ^postgres
 
 ## **Estrutura de memória do PostgreSQL**
 
-As estruturas de memória do PostgreSQL estão na **shared memory** (memória compartilhada) do sistema operacional.
+As estruturas de memória do PostgreSQL estão na ***shared memory*** (memória compartilhada) do sistema operacional.
 
 Nessa estrutura, um processo deve solicitar explicitamente uma área de memória, usando uma chave, para ser compartilhada por outros processos. Esse processo será chamado de servidor. Todos os demais processos, os clientes, que conhecem a área compartilhada, podem acessá-la. Assim, não há proteção para uma memória compartilhada, fazendo com que qualquer processo que tenha a chave possa acessá-la livremente.
 
-A área da **SHARED MEMORY** utilizada pelo PostgreSQL divide-se em duas estruturas, **WAL BUFFER** e **SHARED BUFFER**:
+A área da ***SHARED MEMORY*** utilizada pelo PostgreSQL divide-se em duas estruturas, ***WAL BUFFER*** e ***SHARED BUFFER***:
 
 ![Estrutura de Memória do PostgreSQL](./img/estrutura_de_memoria_do_postgresql.svg "Estrutura de memória PostgreSQL")
 
 - **WALL BUFFER**<br/>
-  Armazena temporariamente, antes de salvá-los em armazenamento persistente (como HD, SSD etc), os vetores de alterações realizadas sendo estes **inserts**, **updates**, **deletes**.
+  Armazena temporariamente, antes de salvá-los em armazenamento persistente (como HD, SSD etc), os vetores de alterações realizadas sendo estes ***inserts***, ***updates***, ***deletes***.
 
 - **SHARED BUFFER**<br/>
   Armazena os blocos de memória, minimizando o acesso ao armazenamento persistente e a contenção quando um grande número de usuários realizam acessos simultaneamente.
@@ -156,7 +156,7 @@ O status da transação é mantido em clog **$PGDATA/pg_clog** (**pg_commit_ts**
 
 O PostgreSQL não desfaz as alterações nas linhas do database quando uma transação é abortada, simplesmente a marca como tal no **clog**. Portanto uma tabela no PostgreSQL pode conter dados de transações abortadas.
 
-**Um processo de VACUUM é fornecido para eliminar os conteúdos das versões expiradas/abortadas de uma linha.**
+**Um processo de *VACUUM* é fornecido para eliminar os conteúdos das versões expiradas/abortadas de uma linha.**
 
 <br/>
 
