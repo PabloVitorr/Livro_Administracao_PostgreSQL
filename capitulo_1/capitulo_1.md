@@ -21,7 +21,7 @@ yum update
 timedatectl set-timezone America/Sao_Paulo
 ```
 
-### **Desabilitando *firewall* e o *Selix* (conjunto de restrições de segurança extra em cima das ferramentas de segurança normais do linux)**
+### **Desabilitando *firewall* e o *Selix* (conjunto de restrições de segurança extra em cima das ferramentas de segurança normais do linux) em ambiente de teste**
 
 - ### **Acesse o usuário root:**
 
@@ -51,9 +51,9 @@ Seguir passo a passo conforme descrito em documentação oficial
 - [**PostgreSQL Downloads**](https://www.postgresql.org/download/ "Packages and Installers")
 <br/>
 
-### **Instalando o pacote *contrib***
+### **Pacote *contrib***
 
-Comando responsável por realizar a instalação do servidor PostgreSQL juntamente com o pacote contrib, que permite a instalação das extensions, ou seja resumindo muito, se trata de um pacote contendo uma série de opcionais que podem ser instalados sobre demanda. 
+Comando responsável por realizar a instalação do servidor PostgreSQL juntamente com o pacote contrib, que permite a instalação das *extensions*, ou seja resumindo muito, se trata de um pacote contendo uma série de opcionais que podem ser instalados sobre demanda. 
 
 ```bash
 yum install -y postgresql14-server postgresql14-contrib
@@ -63,7 +63,7 @@ yum install -y postgresql14-server postgresql14-contrib
 
 ## **Configurações iniciais**
 
-Depois da instalação para que possamos acessar o cluster PostgreSQL, devemos realizar algumas configurações nos arquivos **postgresql.conf** e **pg_hba.conf**.
+Depois da instalação para que possamos acessar o cluster PostgreSQL, e necessario realizar algumas configurações nos arquivos **postgresql.conf** e **pg_hba.conf**.
 
 O arquivo **postgresql.conf** esta ajustado inicialmente apenas para configurações locais. Podemos alterar isso modificando o parâmetro **listen_addresses**:
 
@@ -139,10 +139,10 @@ Acessando arquivo:
   host    all             all             0.0.0.0/0               scram-sha-256
   ```
 
-  Com isso, depois do processo de **reload do cluster**, poderemos conectar-nos ao database remotamente com qualquer ferramenta (por exemplo, PgAdmin). **Esses valores liberam a conexão com senha scram-sha-256 a qualquer host, não sendo, portanto, recomendados para ambiente de produção**.
+  Com isso, depois do processo de ***reload*** do cluster, e possivel conectar ao database remotamente com qualquer ferramenta (por exemplo, PgAdmin). **Esses valores liberam a conexão com senha scram-sha-256 a qualquer host, não sendo, recomendados para ambiente de produção**.
 
 - **Definindo senha do user *postgres***<br/>
-  Inserindo senha ao user postgres por meio o utilitário **psql**, que é instalado juntamente com o **PostgreSQL**.
+  Inserindo senha ao user postgres por meio o utilitário ***psql***, que é instalado juntamente com o **PostgreSQL**.
 
   ```bash
   psql
