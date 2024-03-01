@@ -2,9 +2,9 @@
 
 <br/>
 
-## **pg_xlog (pg_wal PostgreSQL14)**
+## **pg_xlog (pg_wal - PostgreSQL14)**
 
-Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versão 10). O **pg_wal** geralmente sofre gravação contínua, sendo um tunning de natureza quase obrigatória na maioria das instalações movê-lo para outro **filesystem** basta substituir seu diretório por um link simbólico para o ponto de montagem, onde o usuário **owner deve ser o postgres**.
+Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versão 10). O **pg_wal** geralmente sofre gravação contínua, sendo um tunning de natureza quase obrigatória na maioria das instalações movê-lo para outro **filesystem** basta substituir seu diretório por um **link simbólico** para o ponto de montagem, onde o usuário **owner deve ser o postgres**.
 
 **Alguns cuidados devem ser observados, como as necessidades do PostgreSQL estar parado e da realização de cópia do conteúdo do atual pg_wal para o novo dispositivo - lembrando que pode implicar um alto risco de perda de dados se não for feita corretamente.**
 
@@ -12,7 +12,7 @@ Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versã
 
 ## **Alterando a localização do pg_wal**
 
-- **Parar o cluster em execução, por exemplo:**
+- **Parar o cluster em execução, por exemplo com o comando abaixo:**
 
   ```bash
   pg_ctl -D /var/lib/pgsql/14/data/ stop -m f
@@ -108,7 +108,7 @@ Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versã
 
   ![Status PostgreSQL](./img/status_postgresql.png "Status PostgreSQL")
 
-  **OBS:** porém de inicio não conseguia validar o status do serviço através do comando **sudo service postgresql-14** status ou **pg_ctl -D $PGDATA status** reiniciei o cluster analizei os logs e tentei novamente porém ainda não consegui, foi necessáro reiniciar a **vm** , e após reiniciar a **vm**  consegui consultar normalmente. ⚠️ 
+  **OBS:** porém de inicio não conseguia validar o status do serviço através do comando **sudo service postgresql-14 status** ou **pg_ctl -D $PGDATA status** reiniciei o cluster analizei os logs e tentei novamente porém ainda não consegui, foi necessáro reiniciar a **vm** , e após reiniciar a **vm**  consegui consultar normalmente. ⚠️ 
 
 <br/>
 
@@ -116,7 +116,7 @@ Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versã
 
 O conceito de tablespace diz respeito a **possibilidade de criar áreas em outros diretórios em que seja possível direcionar objetos (tabelas, índices etc.)** e, com isso, ter melhor gerenciamento de distribuição de carga por vários discos diferentes.
 
-A **tablespace** pode estar localizada em qualquer diretório desde que a propriedade seja do usuário **postgres**. Ao DBA cabe identificar os objetos que têm muito acesso ou necessidades especiais de armazenamento, ou seja, candidatos naturais a armazenamento em tablespaces.
+A **tablespace** pode estar localizada em qualquer diretório desde que a propriedade seja do usuário **postgres**. Ao **DBA** cabe identificar os objetos que têm muito acesso ou necessidades especiais de armazenamento, ou seja, candidatos naturais a armazenamento em tablespaces.
 
 Por padrão, todos os objetos e dados são armazenados na tablespace padrão, **pg_default**.
 
@@ -139,7 +139,7 @@ CREATE TABLESPACE fastspace LOCATION '/usr/tablespaces/fastspace';
 ### **Excluindo uma tablespace**
   
 ```sql
-DROP TABLESPACE fastspace
+DROP TABLESPACE fastspace;
 ```
 
 ### **Além de criar e eliminar tablespaces, podemos defini-las como "default" para um determinado usuário, com comando:**
@@ -154,7 +154,7 @@ ALTER USER <name_user> SET default_tablespace='name new tablespace';
 
 - [**Download pgAdmin4**](https://www.pgadmin.org/download/pgadmin-4-rpm/ "Download pgAdmin4")
 
-### **Criando nova conexão com os dados do servidor**
+### **Criando nova conexão utilizando os parametros do servidor**
 
   ![Conexão pgAdmin4](./img/conexao_pgadmin4_1.png "Criando nova conexão pgAdmin4")
 
@@ -248,7 +248,7 @@ Após criada role **hw**, sairemos do editor e entraremos novamente como role (u
 
 ## **Criando tablespace de dados**
 
-A **tablespace** padrão é a **pg_default** , default em template1 e template0. Será, portanto, a área de tabela padrão para outros databases, a menos que outra seja definida, por exemplo, com a cláusula **TABLESPACE** em **CREATE DATABASE**.
+A **tablespace** padrão é a **pg_default** , default em **template1** e **template0**. Será, portanto, a área de tabela padrão para outros databases, a menos que outra seja definida, por exemplo, com a cláusula **TABLESPACE** em **CREATE DATABASE**.
 
 - **A localização da pg_default pode ser encontrada por meio da seguinte consulta no database PostgreSQL:**
   
@@ -260,7 +260,7 @@ A **tablespace** padrão é a **pg_default** , default em template1 e template0.
 
   ![Localização pg_default pgAdmin4](./img/localizacao_pg_default_pgadmin4.png "Localização pg_default pgAdmin4")
 
-No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/data/base** para pequenas instalações em apenas um file system (em computação, um file system (sistema de arquivos) é usado para controlar o modo como os dados são armazenados e recuperados) isso não é um problema, mas para grandes sistemas, com diversas tabelas e índices, pode causar transtornos com concorrência de discos e segurança e crescimento excessivo de alguma área, prejudicando todo o cluster. Por essas razões, é sempre interessante **desmembrar** dados, **índices**, arquivos **temporários** e arquivos de **log**.
+No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/data/base** para pequenas instalações em apenas um file system, isso não é um problema, mas para grandes sistemas, com diversas tabelas e índices, pode causar transtornos com concorrência de discos e segurança e crescimento excessivo de alguma área, prejudicando todo o cluster. Por essas razões, é sempre interessante **desmembrar** dados, **índices**, **arquivos temporários** e arquivos de **log**.
 
 ### **Para criação de uma tablespace como visto anteriormente podemos fazer o seguinte:**
 
@@ -306,7 +306,7 @@ No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/da
 
   O cluster pode crescer e necessitar uma melhor organização física. Nesses casos, podemos mover tabelas de uma tablespace para outra.
 
-  No exemplo a seguir, criaremos scripts que devem alterar a tablespace de todas as tabelas do schema rh.
+  No exemplo a seguir, criaremos scripts que devem alterar a tablespace de todas as tabelas do schema **rh**.
 
   ```sql
   SELECT 'ALTER TABLE '|| table_schema || '.' || table_name || ' SET TABLESPACE tbs_hw;'
@@ -317,7 +317,7 @@ No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/da
 
   ![Gerando alteração tablespace](./img/gera_alteracao_tablespace.png "Script para gerar alterações")
 
-  Copiado **script** gerado para nova aba, e realizado a remoção das aspas duplas, e em seguida executado o mesmo.
+  Copiado **script** gerado para nova aba e em seguida executado o mesmo.
 
   ![Alteração tablespace](./img/alteracao_tablespace.png "Script com alterações geradas")
 

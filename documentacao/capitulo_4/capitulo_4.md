@@ -12,12 +12,12 @@
 pg_ctl --help
 ```
 
-Caso o mesmo não esteja funcionando, talvez seja necessário criar a variável 
+Caso o mesmo não esteja funcionando, talvez seja necessário criar a variável de ambiente
 
 ### **Tratativa para contornar**
 
 - Crie um arquivo em **/etc/profile.d/pgsql.sh**
-- Adicione as seguintes informações e salve o arquivo
+- Adicione as seguintes informações para criar a variavel e salve o arquivo
 
   ```bash
   #!/bin/bash
@@ -25,13 +25,13 @@ Caso o mesmo não esteja funcionando, talvez seja necessário criar a variável
   export PATH
   ```
 
-- Execute esse comando para atualizar o PATH atual
+- Execute esse comando para atualizar o ***PATH*** atual
   
   ```bash
   source /etc/profile.d/pgsql.sh
   ```
 
-- Verifique o **PATH** agora
+- Verifique o ***PATH*** agora
 
   ```bash
   echo $PATH
@@ -55,7 +55,9 @@ Observe o comando a seguir:
 pg_ctl start -D $PGDATA
 ```
 
-Ao executa-lo, os processos do cluster PostgreSQL realizarão a leitura dos arquivos de inicialização **postgresql.conf** e **postgresql.auto.conf**, se houver, e tentarão levantar o cluster em memória, inicializando-o. Caso não seja encontrado o arquivo **postgresql.conf**, uma mensagem de erro será gerada, **mas a priori nenhum log padrão será criado, a menos que seja usada a opção -l (log filename)**:
+Ao executa-lo, os processos do cluster PostgreSQL realizarão a leitura dos arquivos de inicialização **postgresql.conf** e **postgresql.auto.conf**, se houver, e tentarão levantar o cluster em memória, inicializando-o. Caso não seja encontrado o arquivo **postgresql.conf**, uma mensagem de erro será gerada, **mas de inicio nenhum log padrão será criado, a menos que seja usada a opção -l (log filename)**:
+
+**Exemplo utilizando a clausula -l :**
 
 ```bash
 pg_ctl start -D $PGDATA -l /var/lib/pgsql/14/data/log/log.log
@@ -92,28 +94,29 @@ pg_ctl stop [-D datadir][-m s[mart]|f[ast]|i[mmediate]]
   pg_ctl stop -D $PGDATA -m smart
   ```
 
-  Após parar o serviço é possível validar o *status* com o comando:
+  Após parar o serviço é possível validar o **status** com o comando:
 
   ```bash
   pg_ctl status -D $PGDATA
   ```
-  É possível também validar os processos:
+
+  É possível também validar os **processos**:
 
   ```bash
   ps auxww|grep ^postgres
   ```
 
 - **Fast**<br/>
-  Nenhuma nova conexão será permitida, mas todas as conexões em andamento serão concluídas, inclusive os backups. As transações pendentes sofrerão um ROLLBACK.
+  Nenhuma nova conexão será permitida, mas todas as conexões em andamento serão concluídas, inclusive os backups. As transações pendentes sofrerão um **ROLLBACK**.
 
 - **Imediate**<br/>
   **Encerrará** todos os processos do servidor abruptamente. Considerada uma forma **extrema** de desligamento, **equivale ao desligamento do host abruptamente**
 
-Os modos **smart** e **fast** são considerados formas de **shutdown** **“limpas”**, **“consistentes”** ou **“regulares”**. A forma **imediate** é cnsiderada **“irregular”** e pode deixar os databases em um estado não consistente que necessitará de recuperação no modo de inicialização.
+Os modos **smart** e **fast** são considerados formas de **shutdown "regulares”**. A forma **imediate** é cnsiderada **“irregular”** e pode deixar os databases em um estado não consistente que necessitará de recuperação no modo de inicialização.
 
 <br/>
 
-## **Inicialização (startup) e desligamento (shutdown) por customização do sistema operacional e/ou de distribuição**
+## **Inicialização (startup) e desligamento (shutdown) por customização do sistema operacional e/ou de distribuição:**
 
 **Distribuições Red Hat (RH), Oracle, CentOS e similares**
 
@@ -130,7 +133,7 @@ Caso apresente o seguinte erro ao tentar executar **start**, **stop**, **status*
 
 ![Erro comando sudo service postgresql](./img/erro_sudo_service_1.png "Mensagem de erro")
 
-Basta adicionar o usuário em questão ao arquivo **/etc/sudoers**
+Basta adicionar o usuário em questão ao arquivo **/etc/sudoers** (**OBS:** em ambiente de teste...)
 
 ![Arquivo sudoers](./img/arquivo_sudoers.png "Arquivo sudoers")
 
@@ -156,12 +159,12 @@ sudo vim /var/lib/pgsql/14/data/postmaster.pid
 
 <br/>
 
-## **Parando o cluster com o comando kill**
+## **Parando o cluster com o comando *kill***
 
-Embora devamos dar preferência ao gerenciamento do cluster por scripts integrados ao sistema operacional e ao **pg_ctl**, é possível realizar diversos tipos de paradas como o comando **kill** juntamente ao **PID**. Temos, nesse caso, as seguintes opções:
+Embora devamos dar preferência ao gerenciamento do cluster por **scripts integrados ao sistema operacional** e ao **pg_ctl**, é possível realizar diversos tipos de paradas como o comando **kill** juntamente ao **PID**. Temos, nesse caso, as seguintes opções:
 
 - **SIGHUP**<br/>
-  Corresponde ao comando **reload**, sendo aplicado com **kill -1 ou -HUP** . Esse argumento faz o **kill** enviar o sinal **“hang up”** aos processos.
+  Corresponde ao comando **reload**, sendo aplicado com **kill -1** ou **-HUP** . Esse argumento faz o **kill** enviar o sinal **“hang up”** aos processos.
 
   ```bash
   sudo kill -1 1102
@@ -174,7 +177,7 @@ Embora devamos dar preferência ao gerenciamento do cluster por scripts integrad
   ```
 
 - **SIGTERM**<br/>
-  Corresponde a parada **smart**, sendo aplicado **kill -15 ou -TERM** . Esse é o valor **default** do comando **kill** que pode ser aplicado também com **killiall** . É considerado **seguro** em termos de pequeno risco de perda de dados.
+  Corresponde a parada **smart**, sendo aplicado **kill -15** ou **-TERM** . Esse é o valor **default** do comando **kill** que pode ser aplicado também com **killiall**. É considerado **seguro** em termos de pequeno risco de perda de dados.
 
   ```bash
   sudo kill -15 1102
@@ -200,7 +203,7 @@ Embora devamos dar preferência ao gerenciamento do cluster por scripts integrad
   ```
 
 - **SIGKILL**<br/>
-  Corresponde à parada *imediate*, sendo aplicado com **kill -9** ou **-KILL**. O **kernel** liberará o processo sem informar o processo dele. Deve ser utilizado apenas se não houver sido possível parar os processos de outra forma. É o comando que acarreta maior risco de perda de dados.
+  Corresponde à parada ***imediate***, sendo aplicado com **kill -9** ou **-KILL**. O **kernel** liberará o processo sem informar o processo dele. Deve ser utilizado apenas se não houver sido possível parar os processos de outra forma. É o comando que acarreta maior risco de perda de dados.
 
   ```bash
   sudo kill -9 1102

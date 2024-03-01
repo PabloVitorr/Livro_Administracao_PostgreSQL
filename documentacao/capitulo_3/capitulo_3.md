@@ -3,11 +3,11 @@
 <br/>
 
 ## **postgresql.conf**<br/>
-O principal arquivo de configuração do PostgreSQL, normalmente localizado em **$PGDATA**. Esse arquivo prescreve o comportamento para o cluster inteiro, ou seja, não é possível configurar comportamentos diferentes em relação a cada banco de dados. É necessário ter em mente que a partir da versão **9.4** foi adicionado o **ALTER SYSTEM**, que permite alterar os valores de parâmetros sem modificar o **postgresql.conf**. Por isso é **recomendado a verificação dos valores do parâmetro do PostgreSQL seja sempre realizada pela view pg_settings**. Os parâmetros ali encontrados dividem-se em várias seções no arquivo:
+O **postgresql.conf** e o principal arquivo de configuração do PostgreSQL, normalmente localizado em **$PGDATA**. Esse arquivo prescreve o comportamento para o cluster inteiro, ou seja, não é possível configurar comportamentos diferentes em relação a cada banco de dados. É necessário ter em mente que a partir da versão **9.4** foi adicionado o **ALTER SYSTEM**, que permite alterar os valores de parâmetros sem modificar o **postgresql.conf**. Por isso é **recomendado a verificação dos valores do parâmetro do PostgreSQL seja sempre realizada pela view pg_settings**. Os parâmetros ali encontrados dividem-se em várias seções no arquivo:
 
 <br/>
 
-## **Seções do arquivo postgresql.conf (PostgreSQL14)**
+## **Seções do arquivo *postgresql.conf* (PostgreSQL14)**
 
 - CONNECTIONS AND AUTHENTICATION
 - FILE LOCATIONS
@@ -44,17 +44,17 @@ O principal arquivo de configuração do PostgreSQL, normalmente localizado em *
   ![Seção RESOURSE USAGE](./img/secao_resource_usage.png "Seção RESOURCE USAGE")
 
 - **WRITE-AHEAD LOG**<br/>
-  Seção que define as possibilidades de ajuste do **WAL**.
+  Seção que define as possibilidades de ajuste do ***WAL***.
   
   ![Seção WRITE-AHEAD LOG](./img/secao_write_ahead_log.png)
 
 ### **Analisando alguns parâmetros do postgresql.conf**
 
 - **max_connection**<br/>
-  Número máximo de conexões suportadas pelo cluster. O valor iniicial de max_connection é 100.
+  Número máximo de conexões suportadas pelo cluster. O valor iniicial de max_connection é **100**.
 
 - **work_mem**<br/>
-  O valor deve ser de até 8MB para servidores com até 32 GB de RAM, 16MB para servidores com até 64 GB de RAM. Se o **max_connections** for maior que 400, devemos dividir esse valor por 2. O work_men é o espaço utilizado para operações de bitmap, hash join e merge.
+  O work_men é o espaço utilizado para operações de **bitmap**, **hash**, **join** e **merge**.
 
 - **maintenance_work**<br/>
   Esse parâmetro define o espaço usado pelo **VACUUM** e **CREATE INDEX**. O valor default é 64MB.
@@ -93,7 +93,7 @@ FROM pg_settings
 
 ![Consulta utilizando a pg_settings](./img/saida_consulta_pg_settings.png)
 
-O **contexto** de cada variável informa-nos da necessidade ou não de reinicialização, alternativamente podemos usar o seguinte comando
+O **contexto** de cada variável informa-nos da necessidade ou não de reinicialização, abaixo comando alternativo:
 
 ```sql
 SELECT name, context FROM pg_settings;
@@ -113,17 +113,17 @@ SELECT name, context FROM pg_settings;
   Enviar ao servidor um sinal HUP fará com que ele recarregue o **postgresql.conf**, e quaisquer alterações feitas neste parâmetro serão imediatamente ativadas.
 
 - **BACKEND**<br/>
-  Semelhantes ao SIGHUP, executando-se pelo fato de que as alterações feitas não afetarão nenhuma sessão de back-end de database já executada, apenas novas sessões iniciadas depois disso sofrerão alterações. Ex: log_connections não pode ser retroativo, para registrar uma conexão ja feita. Somente novas conexões, feitas depois que a log_connections estiver ativa, serão registradas.
+  Semelhantes ao SIGHUP, executando-se pelo fato de que as alterações feitas não afetarão nenhuma sessão de back-end de database já executada, apenas novas sessões iniciadas depois disso sofrerão alterações. Ex: **log_connections** não pode ser retroativo, para registrar uma conexão ja feita. Somente novas conexões, feitas depois que a **log_connections** estiver ativa, serão registradas.
 
 - **SUPERUSER**<br/>
-  Pode ser executado por qualquer superusuário do banco de dados (em geral, o usuário que criou o banco de dados - normalmente, o “postgres”) a qualquer momento sem se quer exigir uma carga de configuração completa.
+  Pode ser executado por qualquer superusuário do banco de dados (em geral, o usuário que criou o banco de dados - normalmente, o *postgres* ) a qualquer momento sem se quer exigir uma carga de configuração completa.
 
 - **USER**<br/>
   As sessões de usuários podem ajustar esses parâmetros a qualquer momento. Suas mudanças afetarão apenas essa sessão.
 
-A partir da versão 9.4, foi introduzido o comando **ALTER SYSTEM**, que nos permite alterar parâmetros sem editar o **postgresql.conf**. Quando utilizamos esse comando no mesmo diretório em que se situa o arquivo **postgresql.conf** válido do cluster, é criado o arquivo **postgresql.auto.conf**, que não deve ser editado diretamente e tem a primazia de seu conteúdo em relação ao **postgresql.conf**, mais um motivo para evitar a verificação dos parâmetros do cluster pela leitura do **postgresql.conf** e utilizar a visualização view **pg_settings**. 
+A partir da versão 9.4, foi introduzido o comando **ALTER SYSTEM**, que permite alterar parâmetros sem editar o **postgresql.conf**. Quando utilizamos esse comando no mesmo diretório em que se situa o arquivo **postgresql.conf** válido do cluster, é criado o arquivo **postgresql.auto.conf**, que não deve ser editado diretamente e tem a primazia de seu conteúdo em relação ao **postgresql.conf**, mais um motivo para evitar a verificação dos parâmetros do cluster pela leitura do **postgresql.conf** e utilizar a view **pg_settings**. 
 
-Caso seja necessária  a localização dos arquivos, podemos utilizar a seguinte consulta:
+Caso seja necessária a localização dos arquivos, podemos utilizar a seguinte consulta:
 
 ```sql
 SELECT name, setting FROM pg_settings WHERE category = 'File Locations';
@@ -131,13 +131,11 @@ SELECT name, setting FROM pg_settings WHERE category = 'File Locations';
 
 ![Localização dos arquivos de coniguração](./img/localizacao_arquivos.png)
 
-Existem em **postgresql.org** várias referências de como calcular os parâmetros, mas, revendo a literatura, encontramos diversos profissionais que o fazem de forma empírica ou com ajustes - isso fica a critério do **DBA**. Lembramos que a natureza dos ajustes está muito relacionada à natureza do sistema (OLTPx, BI etc.).
-
 <br/>
 
 ## **pg_hba.conf**
 
-A autenticação no **cluster** é controlada por um arquivo de configuração tradicionalmente chamado **pg_hba.conf**, armazenado no diretório de dados do cluster **$PGDATA** (HBA - host-based autentication (autenticação baseada em host)). Um arquivo **pg_hba.conf** padrão é instalado quando o diretório de dados é inicializado pelo **initdb**.
+A autenticação no **cluster** é controlada por um arquivo de configuração chamado **pg_hba.conf**, armazenado no diretório de dados do cluster **$PGDATA** (HBA - host-based autentication (autenticação baseada em host)). Um arquivo **pg_hba.conf** padrão é instalado quando o diretório de dados é inicializado pelo **initdb**.
 
 <br/>
 
@@ -165,7 +163,7 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
   Conexão usando **TCP/IP**, mas com comportamento oposto ao de **hostssl**. Apenas combina tentativas de conexão feitas através de **TCP/IP** que não usam **SSL**.
 
 - **Database**<br/>
-  Especifica quais databases o registro correspondente pode acessar. O valor **all** determina que qualquer database válido pode ser acessado. Multiplos nomes podem ser fornecidos separados por vírgula, pode ser criado tambem um arquivo separado com nomes dos databases onde o arquivo pode ser especificado antes do nome do arquivo com **@**.
+  Especifica quais databases o registro correspondente pode acessar. O valor **all** determina que qualquer database pode ser acessado. Multiplos nomes podem ser fornecidos separados por vírgula, pode ser criado tambem um arquivo separado com nomes dos databases onde o arquivo pode ser especificado antes do nome do arquivo com um **@**.
 
 - **User**<br/>
   Especifica quais nomes de usuário de database esse registro corresponde. O valor **all** refere-se a todos os usuários.
@@ -211,7 +209,7 @@ A autenticação no **cluster** é controlada por um arquivo de configuração t
 - **Auth-options**<br/>
   Depois do campo de método de autenticação, pode(m) haver campo(s) de nome do formulário = valor que especifica opções para o método de autenticação. **Dessa forma, pela combinação dos elementos citados anteriormente, esse arquivo descreve quem pode, de onde se pode e como se pode fazer a autenticação (MD5, LDPA etc)**.
 
-**Para que as configurações surtam efeito - sejam carregadas no cluster, é necessário forçar o cluster a ler novamente os arquivos postgresql.conf e pg_hba.conf. Podemos fazer isso com o seguinte comando no Linux, Red Hat, CentOS o Oracle, versão 7:**
+**Para que as configurações surtam efeito - sejam carregadas no cluster, é necessário forçar o cluster a ler novamente os arquivos postgresql.conf e pg_hba.conf, com o seguinte comando no Linux, Red Hat, CentOS o Oracle, versão 7:**
 
 ```bash
 systemctl reload postgresql-9.4

@@ -14,7 +14,7 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** ve
   Arquivo de configuração para autenticação de usuários. Podemos entender o seu funcionamento como um arquivo ***ACL***. Relaciona os **usuários** as **bases de dados**, tipo de **autenticação** e **máscara de rede**.
 
 - **pg_ident.conf**<br/>
-  Usado pelo esquema de autenticação ***ident*** de **usuários** do **sistema operacional** com **PostgreSQL**, mapeia **usuários** de **sistema** e de **base de dados**, estando por padrão vazio.
+  Usado pelo esquema de autenticação ***ident*** de usuários do **sistema operacional** com **PostgreSQL**, mapeia **usuários** de **sistema** e de **base de dados**, estando por padrão vazio.
 
 - **postgresql.conf**<br/>
    Principal arquivo de configuração do PostgreSQL. Sua lista de parâmetros controlam os aspectos de funcionamento do ***cluster***. 
@@ -103,7 +103,7 @@ ps auxww | grep ^postgres
 ![Retorno do comando ps](./img/saida_ps.png)
 
 - **Logger Process** <br/>
-  Coleta as informações do servidor para gravação em arquivo de logs, sendo tabém responsável por apagar os registros. Configuravel em ***postgresql.conf***. As informações podem ser tanto sobre o funcionamento normal do servidor inicio/parada, checkpoint, acessos etc, quanto sobre erros, no servidor ou no acesso a ele, incluindo instruções SQL.
+  Coleta as informações do servidor para gravação em arquivo de logs, sendo tabém responsável por apagar os registros. Configuravel em **postgresql.conf**. As informações podem ser tanto sobre o funcionamento normal do servidor inicio/parada, checkpoint, acessos etc, quanto sobre erros, no servidor ou no acesso a ele, incluindo instruções SQL.
 
 - **Checkpointer Process** <br/>
   Executa, no PostgreSQL, os pontos de verificação, sinalizando que os dados no **WAL** devem ser descarregados e salvos no armazenamento persistente.
