@@ -391,4 +391,4 @@ SELECT query, total_exec_time/calls AS avg, calls FROM pg_stat_statements ORDER 
 
 <br/>
 
-[**<<==**](../capitulo_6/capitulo_6.md) |====| [**Home**](../README.md) |====| [**==>>**](../capitulo_8/capitulo_8.md)
+[**<<==**](../capitulo_6/capitulo_6.md) |====| [**Home**](../../README.md) |====| [**==>>**](../capitulo_8/capitulo_8.md)

@@ -160,6 +160,6 @@ Acessando arquivo:
 
 <br/>
 
- [**Home**](../README.md) |====| [**==>>**](../capitulo_2/capitulo_2.md)
+ [**Home**](../../README.md) |====| [**==>>**](../capitulo_2/capitulo_2.md)
 
 <br/>

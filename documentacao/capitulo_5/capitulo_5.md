@@ -332,4 +332,4 @@ No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/da
 
 <br/>
 
-[**<<==**](../capitulo_4/capitulo_4.md) |====| [**Home**](../README.md) |====| [**==>>**](../capitulo_6/capitulo_6.md)
+[**<<==**](../capitulo_4/capitulo_4.md) |====| [**Home**](../../README.md) |====| [**==>>**](../capitulo_6/capitulo_6.md)

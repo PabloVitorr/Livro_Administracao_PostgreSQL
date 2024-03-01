@@ -217,4 +217,4 @@ Embora devamos dar preferência ao gerenciamento do cluster por **scripts integr
 
 <br/>
 
-[**<<==**](../capitulo_3/capitulo_3.md) |====| [**Home**](../README.md) |====| [**==>>**](../capitulo_5/capitulo_5.md)
+[**<<==**](../capitulo_3/capitulo_3.md) |====| [**Home**](../../README.md) |====| [**==>>**](../capitulo_5/capitulo_5.md)
