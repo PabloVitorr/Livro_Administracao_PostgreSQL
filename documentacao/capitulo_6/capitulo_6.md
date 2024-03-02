@@ -8,7 +8,7 @@ São as maiores entidades lógicas do **cluster PostgreSQL**; todas as demais en
 
 Ao contrário da **tablespace**, que é uma estrutura **física**, o **database é uma estrutura lógica que pode estar em uma ou várias tablespaces**.
 
-A criação de um database deve ser realizada por um **superuser**, com permissão para tanto, com o comando:
+A criação de um database deve ser realizada por um **superuser**, com permissão, com o comando:
 
 ```sql
 CREATE DATABASE <name>;
@@ -87,7 +87,7 @@ SET search_path = '<name_schema>';
   ```
   ![Set search_path](./img/consulta_set_search_path.png "Consulta setando search path")
 
-- **Configurando postgresql.conf, através do search_path**
+- **Alterando search_path**
 
   Neste exemplo foi utilizado o **ALTER SYSTEM** mensionada nos capítulos iniciais.
 

@@ -10,7 +10,7 @@ Ao abordar monitoramento no PostgreSQL geralmente são referidos dois tipos que 
   Tempo em que a base de dados está disponível, o mesmo pode ser obtido através do log (local definido em log_directory no arquivo postgresql.conf) ou através da função **pg_postmaster_start_time()** que retorna, o momento, data e hora do start da base de dados:
 
   ```sql
-  SELECT date_trunc('hour', pg_postmaster_start_time() as start_date, date_trunc('second', current_timestamp - pg_postmaster_start_time)) as uptime;
+  SELECT date_trunc('hour', pg_postmaster_start_time()) as start_date, date_trunc('second', current_timestamp - pg_postmaster_start_time()) as uptime;
   ```
 
   ![Consulta pg_postmaster_start_time()](./img/consulta_pg_postmaster_start_time.png "Consulta pg_postmaster_start_time")
@@ -121,7 +121,7 @@ Caso queira mais especificamente filtrar as queries que apresentam mais demora/l
 SELECT 
   current_timestamp-query_start AS runtime,
   pid,
-  query_stat,
+  query_start,
   datname,
   usename,
   query
@@ -379,7 +379,7 @@ O módulo ***pg_stat_statments*** está disponível no módulo ***contrib*** do 
 
   ![Configuração pg_stat_statements.max e .track](./img/configuracao_pg_stat_statements_max_track.png "Alterando configuração pg_stat_statements.max e pg_stat_statements.track")
 
-Após conclusão realizar o restart do cluster e já é possível verificar as queries com tempo de execução mais alto e o número de vezes em que foram executadas desde que o cluster está no modo ativo:
+Após conclusão ao realizar o restart do cluster já é possível verificar as queries com tempo de execução mais alto e o número de vezes em que foram executadas desde que o cluster está no modo ativo:
 
 ```sql
 SELECT query, total_exec_time/calls AS avg, calls FROM pg_stat_statements ORDER BY 2 DESC;

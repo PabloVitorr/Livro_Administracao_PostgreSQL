@@ -1,7 +1,19 @@
-# Livro_Administracao_PostgreSQL
-Repositório destinado a leitura do livro Administração PostgreSQL
+# L**ivro_Administracao_PostgreSQL**
 
-# Indice
+Repositório destinado a leitura do livro Administração PostgreSQL escrito por E. V. Santos. Como se trata de um conteúdo teórico, criei este repositório com intuito de praticar os conceitos apresentados no livro, onde foram realizadas algumas alterações na configuração do ambiente e também nos conteúdos apresentados afim de trabalhar a prática.
+
+O livro contém um bom conteúdo onde por mais que não seja "avançado" pode ser utilizado como base para direcionameto em estudos mais aprofundados sobre cada tópico apresentado.
+
+# **Ferramentas utilizadas**
+
+- **VMware**
+- **CentOS 7**
+- **PostgreSQL 14**
+- **PGadmin4**
+
+<br/>
+
+## **Documentação**
 
 1. [Capitulo 1](./documentacao/capitulo_1/capitulo_1.md "Capitulo 1")
 2. [Capitulo 2](./documentacao/capitulo_2/capitulo_2.md "Capitulo 2")
