@@ -387,7 +387,145 @@ SELECT query, total_exec_time/calls AS avg, calls FROM pg_stat_statements ORDER 
 
 ![Consulta tempo execução query](./img/consulta_tempo_execucao_query.png)
 
+<br/>
 
+## **Monitorando detalhadamente dados e índices de dados**
+
+### **Monitoramento de área**
+
+Existem alguns módulos ***contrib*** bastante úteis para monitorar espaço utilizado por índices e tabelas, como o **pgstattuple**, que disponibiliza informações relacionadas a utilização de tuplas e **pg_freespacemap**, fornecendo um meio para monitorar o **FSM** (*Free Space Map* - mapa de espaço livre).
+
+```sql
+CREATE OR REPLACE VIEW av_needed AS 
+SELECT *,
+  n_dead_tup > av_threshold AS av_needed,
+  CASE
+    WHEN reltuples > 0 THEN round(100.0 * n_dead_tup/(reltuples))
+  ELSE 0
+  END AS pct_dead
+FROM 
+( SELECT
+    N.nspname, C.relname,
+    pg_stat_get_tuples_inserted(C.oid) AS n_tup_ins,
+    pg_stat_get_tuples_updated(C.oid) AS n_tup_upd,
+    pg_stat_get_tuples_deleted(C.oid) AS n_tup_del,
+    CASE 
+      WHEN pg_stat_get_tuples_updated(C.oid) > 0 THEN pg_stat_get_tuples_hot_updated(C.oid)::REAL/pg_stat_get_tuples_updated(C.oid)
+    END AS hot_update_ratio,
+    pg_stat_get_live_tuples(C.oid) AS n_live_tup,
+    pg_stat_get_dead_tuples(C.oid) AS n_dead_tup,
+    C.reltuples AS reltuples, ROUND(current_setting('autovacuum_vacuum_threshold')::INTEGER+current_setting('autovacuum_vacuum_scale_factor')::NUMERIC*C.reltuples) AS av_threshold,
+    DATE_TRUNC('minute', GREATEST(pg_stat_get_last_vacuum_time(C.oid),
+    pg_stat_get_last_autovacuum_time(C.oid))) AS last_vacuum,
+    DATE_TRUNC('minute', GREATEST(pg_stat_get_last_analyze_time(C.oid), pg_stat_get_last_analyze_time(C.oid))) AS last_analyze
+  FROM pg_class C
+  LEFT JOIN pg_index I ON C.oid = I.indrelid
+  LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
+    WHERE C.relkind IN ('r', 't')
+    AND N.nspname NOT IN ('pg_catalog', 'information_schema') AND N.nspname !~ '^pg_toast') AS av
+    ORDER BY av_needed DESC, n_dead_tup DESC;
+```
+
+O PostgreSQL suporta comandos para reconstrução de índices. O utilitario do cliente permite a execução do **REINDEX** pelo sistema operacional:
+
+```bash
+reindexdb
+```
+
+O comando acima irá executar o **SQL REINDEX** em cada tabela no banco de dados padrão, caso deseje reindexar todos os bancos de dados é possível usar o comando:
+
+```bash
+reindexdb -a
+```
+
+O **REINDEX** coloca um  ***acess exclusive lock*** (bloqueio de tabela exclusiva) enquanto é executado, de modo que provavelmente o **database** ficará indisponível para uso.
+
+### **Monitoramento de uso dos índices**
+
+É possível monitorar os índice nos databases a partir de **views** de sistemas, que registram a utilização dos mesmos:
+
+- **pg_stat_all_indexes:** Informações de todos os índices do **database**.
+- **pg_stat_sys_indexes:** Informações de todos os índices das tabelas do sistema.
+- **pg_stat_user_indexes:** Informações de todos os índices das tabelas dos usuários.
+
+### **As principais informações apresentadas nas views são**
+
+- **Relid:** Identificador da tabela referenciada.
+- **Indexrelid:** Identificador do índice.
+- **Schemaname:** Nome do schema onde estão as tabelas e os índices.
+- **Relname:** Nome da tabela.
+- **Indexrelname:** Nome do índice.
+- **idx_scan:** Quantidade de utilizações do índice.
+- **idx_tup_read:** Quantidade de linhas lidas do índice.
+- **idx_tup_fetch:** Quantidade de linhas da tabela lidas pelo índice.
+
+**É possível verificar o tamanho de cada índice nunca utilizado:**
+
+```sql
+SELECT 
+  sai.schemaname AS esquema,
+  sai.relname AS tabela,
+  sai.indexrelname AS nome_indice,
+  sai.schemaname||'.'||sai.indexrelname AS esq_indice,
+  pg_size_pretty(pg_relation_size(sai.indexrelid::BIGINT)) AS tamanho
+FROM pg_stat_all_indexes sai
+INNER JOIN pg_index idx ON idx.indexrelid = sai.indexrelid
+  WHERE sai.idx_scan = 0
+  AND sai.schemaname NOT IN ('pg_toast','pg_catalog')
+  AND idx.indisprimary = 'n'
+  ORDER BY pg_relation_size(sai.indexrelid::BIGINT) DESC;
+```
+
+**Outra informação importante é a existência de índices duplicados. Onde é possível selecionar o índice mais amplo e apagar as demais duplicatas:**
+
+```sql
+SELECT 
+  pg_stat_user_indexes.schemaname AS nome_do_esquema,pg_stat_user_indexes.relname AS nome_da_tabela,
+  pg_attribute.attname AS nome_do_atributo,pg_stat_user_indexes.indexrelname AS nome_do_indice,pg_size_pretty(pg_relation_size(indexrelid::BIGINT)) AS tamanho,
+  CASE pg_index.indisprimary
+    WHEN 't' THEN 'Sim'
+  ELSE 'Nao'
+  END AS indice_na_chave_primaria
+FROM pg_index
+JOIN pg_stat_user_indexes USING(indexrelid)
+JOIN (SELECT  
+        pg_index.indrelid,
+        pg_index.indkey,
+        count(*)
+      FROM pg_index
+      JOIN pg_stat_user_indexes USING(indexrelid)
+      GROUP BY pg_index.indrelid, pg_index.indkey
+      HAVING count(*)>1) ind_dup ON pg_index.indrelid = ind_dup.indrelid AND pg_index.indkey = ind_dup.indkey
+JOIN pg_attribute ON pg_attribute.attrelid = ind_dup.indrelid AND pg_attribute.attnum = SOME(pg_index.indkey)
+  ORDER BY pg_stat_user_indexes.schemaname, tamanho DESC, pg_stat_user_indexes.relname, pg_index.indisprimary = 't' DESC;
+```
+
+<br/>
+
+## **Estatisticas**
+
+Existem dois tipos básicos de estatísticas geradas no PostgreSQL **distribuição de dados** e **monitoramento**
+
+As estatisticas de distribuição são utilizadas para fornecer informações que promovem um plano de excução para as **queries**. Algumas dessas informações são:
+
+- Quantas linhas são retornadas em uma consulta de **join**.
+- Quanta memória é necessária para realizar a agregação.
+
+### **É possível apagar as estatísticas com o uso de funções como:**
+
+**Apagando em uma tabela:**
+
+```sql
+SELECT pg_stat_reset_single_table_counters(<oid of the table>);
+```
+
+**Apagando em todas as tabelas:**
+
+```sql
+SELECT pg_stat_reset();
+```
+
+Com base nessas informações é possível escolher melhor o plano de execução para efetuar uma consulta, diminuindo, com isso, a utilização de I/O de disco e o uso de CPU e memória. Essas informações são coletadas pelo **ANALYZE** ou **AUTOVACUUM** e armazenadas em tabelas regulares onde é possível acessar a pg_statistic ou uma visão pg_stats.
 
 <br/>
 
