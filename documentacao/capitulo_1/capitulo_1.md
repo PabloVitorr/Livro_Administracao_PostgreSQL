@@ -94,7 +94,7 @@ Acessando arquivo:
 
   # - Connection Settings -
 
-  #listen_addresses = 'localhost'         # what IP address(es) to listen on;
+  #listen_addresses = '*'         # what IP address(es) to listen on;
   ```
 
 - **Habilitando as conexões no *pg_hba.conf***<br/>
