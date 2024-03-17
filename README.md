@@ -1,6 +1,6 @@
 # L**ivro_Administracao_PostgreSQL**
 
-Repositório destinado a leitura do livro Administração PostgreSQL escrito por E. V. Santos. Como se trata de um conteúdo teórico, criei este repositório com intuito de praticar os conceitos apresentados no livro, onde foram realizadas algumas alterações na configuração do ambiente e também nos conteúdos que foram abordados no livro, afim de trabalhar a prática e testes auternativos.
+Repositório destinado a leitura do livro Administração PostgreSQL escrito por E. V. Santos. Como se trata de um conteúdo teórico, criei este repositório com intuito de praticar os conceitos apresentados no livro, onde foram realizadas algumas alterações na configuração do ambiente e também nos conteúdos que foram abordados no livro, afim de trabalhar a prática e testes alternativos.
 
 O livro contém um bom conteúdo onde por mais que não seja "avançado" pode ser utilizado como base para direcionameto em estudos mais aprofundados sobre cada tópico apresentado.
 
