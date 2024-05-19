@@ -1,30 +1,14 @@
 # L**ivro_Administracao_PostgreSQL**
 
+![Cent OS](https://img.shields.io/badge/cent%20os-002260?style=for-the-badge&logo=centos&logoColor=F0F0F0)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+
+<br/>
+
 Repositório destinado a leitura do livro Administração PostgreSQL escrito por E. V. Santos. Como se trata de um conteúdo teórico, criei este repositório com intuito de praticar os conceitos apresentados no livro, onde foram realizadas algumas alterações na configuração do ambiente e também nos conteúdos apresentados afim de trabalhar a prática.
 
 O livro contém um bom conteúdo onde por mais que não seja "avançado" pode ser utilizado como base para direcionameto em estudos mais aprofundados sobre cada tópico apresentado.
 
-<br/>
-
-## **S.O utilizado**
-
-<picture>
-  <img src="./icons/centos_icon.svg" width="54px" height="54px" title="CentOS7" alt="Ícone CentOS7"></img>
-</picture>
-
-<br/>
-
-## **Ferramentas utilizadas**
-
-<picture>
-  <img src="./icons/vmware_workstation_icon.svg" width="54px" height="54px" title="VMware" alt="Ícone VMware"></img>
-</picture>
-<span> </span>
-<picture>
-  <img src="./icons/postgresql_icon.svg" width="54px" height="54px" title="PostgreSQL14 - pgAdmin4" alt="Ícone PostgreSQL e pgAdmin4"></img>
-</picture>
-
-<br/>
 <br/>
 
 ## **Documentação**
