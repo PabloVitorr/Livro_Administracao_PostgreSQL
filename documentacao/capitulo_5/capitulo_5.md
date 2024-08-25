@@ -6,7 +6,7 @@
 
 Os arquivos de **WAL** são gerados no diretório **pg_wal** (a partir da versão 10). O **pg_wal** geralmente sofre gravação contínua, sendo um tunning de natureza quase obrigatória na maioria das instalações movê-lo para outro **filesystem** basta substituir seu diretório por um **link simbólico** para o ponto de montagem, onde o usuário **owner deve ser o postgres**.
 
-**Alguns cuidados devem ser observados, como as necessidades do PostgreSQL estar parado e da realização de cópia do conteúdo do atual pg_wal para o novo dispositivo - lembrando que pode implicar um alto risco de perda de dados se não for feita corretamente.**
+**Alguns cuidados devem ser observados, como as necessidades do PostgreSQL estar parado e da realização de cópia do conteúdo do atual pg_wal para o novo dispositivo - lembrando que pode implicar um alto risco de perda de dados se não for feita  corretamente.**
 
 <br/>
 
@@ -122,7 +122,7 @@ Por padrão, todos os objetos e dados são armazenados na tablespace padrão, **
 
  ### **Definindo uma tablespace**
 
-  Os diretórios devem existir previamente, tendo sido criados por usuarios do sistema operacional, e ser de propriedade do usuário postgres.
+  Os diretórios devem existir previamente, tendo sido criados por usuários do sistema operacional, e ser de propriedade do usuário postgres.
   
 ```bash
 mkdir tablespaces
@@ -164,7 +164,7 @@ ALTER USER <name_user> SET default_tablespace='name new tablespace';
 
   ![Interface pgAdmin4](./img/interface_pgadmin4.png "Interface pgAdmin4")
 
-Agora será crada uma **role** . Nesse instante, será gerado um usuário com privilégios para criação de database. Em seguida, será desenvolvido um database, um schema para melhor organização e algumas tabelas.
+Agora será crada uma **role** . Nesse instante, será gerado um **usuário** com privilégios para criação de **database**. Em seguida, será desenvolvido um **database**, um **schema** para melhor organização e algumas **tabelas**.
 
 - **Status atual**
   
@@ -172,7 +172,7 @@ Agora será crada uma **role** . Nesse instante, será gerado um usuário com pr
 
 - **Estudo de caso**
 
-  Desenvolvendo a estrutura para o database HardWork, de uma empresa de hardware e software. Iniciando com a criação do usuário (role) **hw**.
+  Desenvolvendo a estrutura para o database `HardWork`, de uma empresa de hardware e software. Iniciando com a criação do usuário (**role**) **hw**.
 
   ```sql
   CREATE ROLE hw WITH LOGIN PASSWORD '<senha>' CREATEDB CREATE ROLE;
@@ -180,7 +180,7 @@ Agora será crada uma **role** . Nesse instante, será gerado um usuário com pr
 
   ![Criando role](./img/criando_role.png "Script criação de role")
 
-Após criada role **hw**, sairemos do editor e entraremos novamente como role (usuário) **hw**. Feito isso desenvolveremos o novo database **HardWork**, um novo schema **rh** e as tabelas **rh.empleyees** e **rh.departments**:
+Após criada role `hw`, sairemos do editor e entraremos novamente como **role** (usuário) `hw`. Feito isso desenvolveremos o novo **database** `HardWork`, um novo **schema** **rh** e as **tabelas** `rh.empleyees` e `rh.departments`:
 
 - **Criando database**
   
@@ -194,7 +194,7 @@ Após criada role **hw**, sairemos do editor e entraremos novamente como role (u
   CREATE SCHEMA rh;
   ```
 
-- **Criando tabela employees**
+- **Criando tabela `employees`**
   
   ```sql
   CREATE TABLE rh.employees (
@@ -205,7 +205,7 @@ Após criada role **hw**, sairemos do editor e entraremos novamente como role (u
   );
   ```
 
-- **Inserindo dados na tabela employees**
+- **Inserindo dados na tabela `employees`**
 
   ```sql
   INSERT INTO rh.employees VALUES 
@@ -224,7 +224,7 @@ Após criada role **hw**, sairemos do editor e entraremos novamente como role (u
     (112, 'Kevin', 1001, 4800);
   ```
 
-- **Criando tabela departments**
+- **Criando tabela `departments`**
   
   ```sql
   CREATE TABLE rh.departments (
@@ -233,7 +233,7 @@ Após criada role **hw**, sairemos do editor e entraremos novamente como role (u
   );
   ```
 
-- **Inserindo dados na tabela departments**
+- **Inserindo dados na tabela `departments`**
   
   ```sql
   INSERT INTO rh.departments VALUES 
@@ -248,7 +248,7 @@ Após criada role **hw**, sairemos do editor e entraremos novamente como role (u
 
 ## **Criando tablespace de dados**
 
-A **tablespace** padrão é a **pg_default** , default em **template1** e **template0**. Será, portanto, a área de tabela padrão para outros databases, a menos que outra seja definida, por exemplo, com a cláusula **TABLESPACE** em **CREATE DATABASE**.
+A **tablespace** padrão é a **pg_default** , default em **template1** e **template0**. Será, portanto, a área de tabela padrão para outros databases, a menos que outra seja definida, por exemplo, com a cláusula `TABLESPACE` em `CREATE DATABASE`.
 
 - **A localização da pg_default pode ser encontrada por meio da seguinte consulta no database PostgreSQL:**
   
@@ -290,7 +290,7 @@ No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/da
   chmod 700 pg_tbs_hw
   ```
 
-- **Para criar a role, é necessário ser SUPERUSER. Caso se queira utilizar o user hw como postgres, faremos esta execução:**
+- **Para criar a role, é necessário ser SUPERUSER. Caso se queira utilizar o user `hw` como postgres, faremos esta execução:**
 
   ```sql
   ALTER USER hw SUPERUSER;
@@ -306,7 +306,7 @@ No exemplo citado acima, a localização de pg_default é **/var/lib/pgsql/14/da
 
   O cluster pode crescer e necessitar uma melhor organização física. Nesses casos, podemos mover tabelas de uma tablespace para outra.
 
-  No exemplo a seguir, criaremos scripts que devem alterar a tablespace de todas as tabelas do schema **rh**.
+  No exemplo a seguir, criaremos scripts que devem alterar a tablespace de todas as tabelas do schema **`rh`**.
 
   ```sql
   SELECT 'ALTER TABLE '|| table_schema || '.' || table_name || ' SET TABLESPACE tbs_hw;'

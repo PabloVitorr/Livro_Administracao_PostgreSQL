@@ -14,7 +14,7 @@ A criação de um database deve ser realizada por um **superuser**, com permiss�
 CREATE DATABASE <name>;
 ```
 
-Nesse caso o **owner** (dono) será o usuário que criou, mas é possível mudar isso usando o mesmo comando:
+Nesse caso o **owner** (dono) será o usuário que criou, mas é possível mudar isso usando o comando:
 
 ```sql
 CREATE DATABASE <name> OWNER <user>;
@@ -39,7 +39,7 @@ CREATE DATABASE name
 
 ## **Schemas**
 
-Os schemas **são subdivisões lógicas dos databases, similares aos diretórios**. Não podem ser alinhadas, também não é possível ter schemas dentro de schemas. Sua finalidade é separar objetos de aplicações diferentes ou de natureza diversa, **com o intuito de melhorar a organização da estrutura do database**.
+Os schemas **são subdivisões lógicas dos databases, similares aos diretórios**. Não podem ser alinhados, também não é possível ter schemas dentro de schemas. Sua finalidade é separar objetos de aplicações diferentes ou de natureza diversa, **com o intuito de melhorar a organização da estrutura do database**.
 
 ### **Comando para criação de um schema**
 

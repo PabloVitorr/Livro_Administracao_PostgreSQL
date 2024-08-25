@@ -11,7 +11,7 @@
   Backup realizado com o database em funcionamento. Pode apresentar problemas de consistência, mas não gera indisponibilidades ao sistema. É de dois tipos, físico e lógico:
     
     - **Backup físico**<br/>
-      São copiados os arquivos do banco de seus diretorios de origem. Esse tipo de backup normalmente é realizado com o databaase desligado, mas pode ser implementado com ***hot backup*** com mecanismos de geração e gerenciamento de **WAL**. Esse tipo de backup não é utilizado ara migrações de versão. Permite a recuperação **PITR** e Total usando os arquivos de vetores transacionais.
+      São copiados os arquivos do banco de seus diretorios de origem. Esse tipo de backup normalmente é realizado com o databaase desligado, mas pode ser implementado com ***hot backup*** com mecanismos de geração e gerenciamento de **WAL**. Esse tipo de backup não é utilizado para migrações de versão. Permite a recuperação **PITR** e **Total** usando os arquivos de vetores transacionais.
 
     - **Backup lógico**<br/>
       Realizado com o banco aberto, em que são gerados arquivos com os comandos SQL para recriação do ambiente, independe de ambiente de hardware e pode ser usado para migração de dados. Permite a cópia de objetos individuais, são extraídos os dados e os metadados, gerando scripts que podem ser aplicados para restaurar um banco de dados a uma determinada posição.

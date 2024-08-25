@@ -13,9 +13,9 @@ O **postgresql.conf** e o principal arquivo de configuração do PostgreSQL, nor
 - FILE LOCATIONS
 - RESOURCE USAGE (except WAL)
 - WRITE AHEAD LOG
-- REPLICATIO
+- REPLICATION
 - QUERY TUNING
-- ERROR REPORTING AND LOGGGING
+- ERROR REPORTING AND LOGGING
 - PROCESS TITLE
 - RUNTIME STATISTICS
 - AUTOVACUUM PARAMETERS
@@ -54,16 +54,16 @@ O **postgresql.conf** e o principal arquivo de configuração do PostgreSQL, nor
   Número máximo de conexões suportadas pelo cluster. O valor iniicial de max_connection é **100**.
 
 - **work_mem**<br/>
-  O work_men é o espaço utilizado para operações de **bitmap**, **hash**, **join** e **merge**.
+  O **work_men** é o espaço utilizado para operações de **bitmap**, **hash**, **join** e **merge**.
 
 - **maintenance_work**<br/>
-  Esse parâmetro define o espaço usado pelo **VACUUM** e **CREATE INDEX**. O valor default é 64MB.
+  Esse parâmetro define o espaço usado pelo **VACUUM** e **CREATE INDEX**. O valor default é **64MB**.
 
 - **seq_page_cost**<br/>
-  Custo estimado de leitura de página em disco para páginas sequenciais, valor default 1.
+  Custo estimado de leitura de página em disco para páginas sequenciais, valor default **1**.
 
 - **random_page_cost**<br/>
-  Custo estimado de leitura de página em disco para páginas não sequenciais, default 4 (quanto mais rápido o disco, ou o uso de SSD, menor pode ser o valor).
+  Custo estimado de leitura de página em disco para páginas não sequenciais, default **4** (quanto mais rápido o disco, ou o uso de SSD, menor pode ser o valor).
 
 <br/>
 
@@ -104,19 +104,19 @@ SELECT name, context FROM pg_settings;
 ### **Os resultados obtidos na coluna *context* podem ser resumidos em:**
 
 - **INTERNAL**<br/>
-  Configurações realizadas em tempo de compilação, não podendo ser alteradas sem a recompilação do servidor.
+  Configurações realizadas em tempo de compilação, **não podendo ser alteradas sem a recompilação do servidor**.
 
 - **POSTMASTER**<br/>
-  É atualizado somente quando um reinício completo do servidor é realizado. Todas as configurações de memória enquadram-se nessa categoria.
+  É atualizado **somente quando um reinício completo do servidor é realizado**. Todas as configurações de memória enquadram-se nessa categoria.
 
 - **SIGHUP**<br/>
-  Enviar ao servidor um sinal HUP fará com que ele recarregue o **postgresql.conf**, e quaisquer alterações feitas neste parâmetro serão imediatamente ativadas.
+  Enviar ao servidor um sinal **HUP** fará com que ele recarregue o **postgresql.conf**, e quaisquer alterações feitas neste parâmetro serão imediatamente ativadas.
 
 - **BACKEND**<br/>
-  Semelhantes ao SIGHUP, executando-se pelo fato de que as alterações feitas não afetarão nenhuma sessão de back-end de database já executada, apenas novas sessões iniciadas depois disso sofrerão alterações. Ex: **log_connections** não pode ser retroativo, para registrar uma conexão ja feita. Somente novas conexões, feitas depois que a **log_connections** estiver ativa, serão registradas.
+  Semelhantes ao **SIGHUP**, executando-se pelo fato de que as alterações feitas não afetarão nenhuma sessão de back-end de database já executada, apenas novas sessões iniciadas depois disso sofrerão alterações. Ex: **log_connections** não pode ser retroativo, para registrar uma conexão ja feita. Somente novas conexões, feitas depois que a **log_connections** estiver ativa, serão registradas.
 
 - **SUPERUSER**<br/>
-  Pode ser executado por qualquer superusuário do banco de dados (em geral, o usuário que criou o banco de dados - normalmente, o *postgres* ) a qualquer momento sem se quer exigir uma carga de configuração completa.
+  Pode ser executado por qualquer superusuário do banco de dados (em geral, o usuário que criou o banco de dados - normalmente, o **postgres** ) a qualquer momento sem se quer exigir uma carga de configuração completa.
 
 - **USER**<br/>
   As sessões de usuários podem ajustar esses parâmetros a qualquer momento. Suas mudanças afetarão apenas essa sessão.
@@ -135,7 +135,7 @@ SELECT name, setting FROM pg_settings WHERE category = 'File Locations';
 
 ## **pg_hba.conf**
 
-A autenticação no **cluster** é controlada por um arquivo de configuração chamado **pg_hba.conf**, armazenado no diretório de dados do cluster **$PGDATA** (HBA - host-based autentication (autenticação baseada em host)). Um arquivo **pg_hba.conf** padrão é instalado quando o diretório de dados é inicializado pelo **initdb**.
+A autenticação no **cluster** é controlada por um arquivo de configuração chamado **pg_hba.conf**, armazenado no diretório de dados do cluster **$PGDATA** (**HBA - host-based autentication (autenticação baseada em host)**). Um arquivo **pg_hba.conf** padrão é instalado quando o diretório de dados é inicializado pelo **initdb**.
 
 <br/>
 
@@ -198,7 +198,7 @@ A autenticação no **cluster** é controlada por um arquivo de configuração c
   Recupera o nome de usuário do sistema operacional cliente e verifica se este corresponde ao nome de usuario do database solicitado.
 
 - **LDAP**<br/> 
-  Realia a autenticação recorrendo a um servidor LDAP (por exemplo Novell, Microsoft AD etc.).
+  Realiza a autenticação recorrendo a um servidor LDAP (por exemplo Novell, Microsoft AD etc.).
 
 - **Cert**<br/> 
   Realiza a autenticação usando certificados SSL do cliente.
@@ -209,10 +209,16 @@ A autenticação no **cluster** é controlada por um arquivo de configuração c
 - **Auth-options**<br/>
   Depois do campo de método de autenticação, pode(m) haver campo(s) de nome do formulário = valor que especifica opções para o método de autenticação. **Dessa forma, pela combinação dos elementos citados anteriormente, esse arquivo descreve quem pode, de onde se pode e como se pode fazer a autenticação (MD5, LDPA etc)**.
 
-**Para que as configurações surtam efeito - sejam carregadas no cluster, é necessário forçar o cluster a ler novamente os arquivos postgresql.conf e pg_hba.conf, com o seguinte comando no Linux, Red Hat, CentOS o Oracle, versão 7:**
+**Para que as configurações surtam efeito - sejam carregadas no cluster, é necessário forçar o cluster a ler novamente os arquivos postgresql.conf e pg_hba.conf, com o seguinte comando no Linux, Red Hat, CentOS ou Oracle, versão 7:**
 
 ```bash
 systemctl reload postgresql-9.4
+```
+
+ou na versao 14
+
+```bash
+systemctl reload postgresql-14
 ```
 
 Depois de configurado, precisamos realizar a conexão ao cluster, o usuário inicial é o **postgres**, o **owner** do cluster. O usuário postgres é gerado por dafault na criação do cluster, podendo ser realizado o primeiro acesso dessa forma:

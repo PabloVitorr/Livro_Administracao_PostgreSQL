@@ -21,15 +21,23 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** ve
 
 ### **Estrutura do diretório *data* no Postgresql14 em uma instalação RedHat CentOS:**
 
-![Conteúdo contido no diretório data](./img/diretorio.png "Conteúdo contido no diretório data'")
+![Conteúdo contido no diretório data](./img/diretorio.png "Conteúdo contido no diretório /var/lib/pgsql/14/data")
 
 ### **Breve descrição das principais localizações e arquivos:**
 
 - **PG_VERSION**<br/>
   Contém a versão majoritária do PostgreSQL.
 
+  ![Abrindo arquivo PG_VERSION](./img/pg_version_1.png)
+
+  ![Conteudo do arquivo PG_VERSION](./img/pg_version_2.png)
+
 - **base**<br/> 
-  Armazena por padrão, os arquivos de dados em subdiretórios para cada base. O nome dos subdiretórios referentes às bases de dados do cluster podem ser obtidos consultando a tabela do catálogo **pg_database**:
+  Armazena por padrão, os arquivos de dados em subdiretórios para cada base. 
+  
+  ![Subdiretorios correspondentes as bases de dados](./img/subdiretorios_bases_2.png)
+
+  O nome dos subdiretórios referentes às bases de dados do cluster podem ser obtidos consultando a tabela do catálogo **pg_database**:
 
   ```sql
   SELECT oid, datname FROM pg_database;
@@ -46,6 +54,8 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** ve
 - **log**<br/>
   Diretorio com arquivos de log do PostgreSQL, cada um correspondendo a um dia da semana.
 
+  ![Conteudo do diretorio log](./img/log.png)
+
 - **pg_commit_ts**<br/>
   Subdiretório contendo dados de carimbo de data/hora de confirmação de transação.
 
@@ -58,32 +68,44 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** ve
 - **pg_stat_tmp**<br/>
   Subdiretório, contendo arquivos temporários para o subsistema de estatisticas.
 
+  ![Conteudo do diretorio pg_stat_tmp](./img/pg_stat_tmp.png)
+
 - **pg_subtrans**<br/>
   Subdiretório que contém dados de status de subtransação.
 
 - **pg_tblspc**<br/>
-  Subdiretório que contem os **links simbólicos** para as tablespaces.
+  Subdiretório que contém os **links simbólicos** para as **tablespaces**.
+
+  **OBS**: Exemplo obtido apos realização de processo posterior de criação de link 
 
 - **pg_twophase**<br/>
-  Subdiretório que contem os estados para transações do tipo **prepared transactions**.
+  Subdiretório que contém os estados para transações do tipo **prepared transactions**.
 
 - **pg_xlog (a partir da versao 10 chamado de *pg_wal* )**<br/>
-  Subdiretorio que contem os arquivos de ***wal*** (Write Ahead Log).
+  Subdiretorio que contém os arquivos de ***wal*** (Write Ahead Log).
 
 - **postmaster.opts**<br/>
   Arquivo utilizado para gravar as opções de linha de comando em que o servidor foi iniciado pela ultima vez.
 
+  ![Conteudo do arquivo postmaster.opts](./img/postmaster_opts.png)
+
 - **postmaster.pid**<br/>
-  Arquivo que armazena as informações ***PID*** (postmaster process ID) atual caminho do diretório de dados do cluster, carimbo de data/hora de inicio do postmaster, número da porta, caminho do diretório de soquete do domínio Unix, first listen_address válido e ID de segmento de memória compartilhada. **OBS: Esse arquivo não esta presente após encerramento do servidor**.
+  Arquivo que armazena as informações **PID** (postmaster process ID), **atual caminho do diretório de dados do cluster**, **carimbo de data/hora de inicio do postmaster**, **número da porta**, **caminho do diretório de soquete do domínio Unix**, **first listen_address válido** e **ID de segmento de memória compartilhada**. **OBS: Esse arquivo não esta presente após encerramento do servidor**.
+
+  ![Conteudo do arquivo postmaster.pid](./img/postmaster_pid.png)
 
 - **postgresql.conf**<br/>
   Principal arquivo de configuração do cluster.
+
+  ![Conteudo do arquivo postgresql.conf](./img/postgresql_conf.png)
 
 - **postgresql.auto.conf**<br/>
   Usado para armazenar parâmetros de configuração, configurados através do **ALTER SYSTEM**.
 
 - **pg_hba.conf**<br/>
   Arquivo que configura a conexão entre databases e clientes.
+
+  ![Conteudo do arquivo pg_hba.conf](./img/pg_hba_conf.png)
 
 - **pg_ident.conf**<br/>
   Arquivo que relaciona os usuarios às bases de dados, por padrão vazio.
@@ -94,7 +116,7 @@ Na figura abaixo, visualizamos a estrutura básica do servidor **PostgreSQL** ve
 
 ![Estrutura de Processos do PostgreSQL9.4](./img/estrutura_de_processos.svg "Estrutura de Processos PostgreSQL9.4")
 
-### **E possivel observar esses processos com o comando *ps* (Postgresql14):**
+### **E possivel observar esses processos com o comando `ps` (Postgresql14):**
 
 ```bash
 ps auxww | grep ^postgres
@@ -103,7 +125,7 @@ ps auxww | grep ^postgres
 ![Retorno do comando ps](./img/saida_ps.png)
 
 - **Logger Process** <br/>
-  Coleta as informações do servidor para gravação em arquivo de logs, sendo tabém responsável por apagar os registros. Configuravel em **postgresql.conf**. As informações podem ser tanto sobre o funcionamento normal do servidor inicio/parada, checkpoint, acessos etc, quanto sobre erros, no servidor ou no acesso a ele, incluindo instruções SQL.
+  Coleta as informações do servidor para gravação em arquivo de logs, sendo também responsável por apagar os registros. Configurável em **postgresql.conf**. As informações podem ser tanto sobre o funcionamento normal do servidor inicio/parada, checkpoint, acessos etc, quanto sobre erros, no servidor ou no acesso a ele, incluindo instruções SQL.
 
 - **Checkpointer Process** <br/>
   Executa, no PostgreSQL, os pontos de verificação, sinalizando que os dados no **WAL** devem ser descarregados e salvos no armazenamento persistente.
@@ -142,7 +164,7 @@ A área da ***SHARED MEMORY*** utilizada pelo PostgreSQL divide-se em duas estru
   Armazena os blocos de memória, minimizando o acesso ao armazenamento persistente e a contenção quando um grande número de usuários realizam acessos simultaneamente.
   
 - **MVCC (Multversion Concurrency Control)**<br/>
-    é o método utilizado pelo PostgreSQL para lidar com a consistência dos dados quando multiplos processos acessam uma mesma tabela.
+    É o método utilizado pelo PostgreSQL para lidar com a consistência dos dados quando multiplos processos acessam uma mesma tabela.
     
     No PostgreSQL, quando uma linha é atualizada, uma nova versão desta é criada e inserida na tabela. A versão anterior é fornecida como um ponteiro para a nova. Ela é marcada como **"expirada"**, mas permanece no banco de dados até que o **"coletor de lixo"** a elimine (processo de **VACUUM**). Para suportar a multiversão, cada tupla possui dois dados adicionais gravados em si.
 

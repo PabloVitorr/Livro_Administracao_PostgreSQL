@@ -25,6 +25,8 @@ Caso o mesmo não esteja funcionando, talvez seja necessário criar a variável 
   export PATH
   ```
 
+  ![Arquivo psql.sh](./img/profile_sh.png)
+
 - Execute esse comando para atualizar o ***PATH*** atual
   
   ```bash

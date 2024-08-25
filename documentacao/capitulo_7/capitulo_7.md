@@ -10,13 +10,13 @@ Ao abordar monitoramento no PostgreSQL geralmente são referidos dois tipos que 
   Tempo em que a base de dados está disponível, o mesmo pode ser obtido através do log (local definido em log_directory no arquivo postgresql.conf) ou através da função **pg_postmaster_start_time()** que retorna, o momento, data e hora do start da base de dados:
 
   ```sql
-  SELECT date_trunc('hour', pg_postmaster_start_time()) as start_date, date_trunc('second', current_timestamp - pg_postmaster_start_time()) as uptime;
+  SELECT date_trunc('hour', pg_postmaster_start_time()) AS start_date, date_trunc('second', current_timestamp - pg_postmaster_start_time()) AS uptime;
   ```
 
   ![Consulta pg_postmaster_start_time()](./img/consulta_pg_postmaster_start_time.png "Consulta pg_postmaster_start_time")
 
 - **Variação do tamanho da base**<br/>
-  O tamanho da base de dados pode ser analisado com a seguinte consulta
+  O tamanho da base de dados pode ser analisado com a seguinte consulta:
 
   ```sql
   SELECT pg_size_pretty(sum(pg_database_size(oid))::BIGINT) FROM pg_database;
@@ -24,7 +24,7 @@ Ao abordar monitoramento no PostgreSQL geralmente são referidos dois tipos que 
   ![Consulta tamanho de base](./img/consulta_tamanho_de_base.png "Consulta tamanho de base")
 
 - **Número total de conexões**<br/>
-  Para verificar o quão próximo o número de conexões esta de atingir o limite
+  Para verificar o quão próximo o número de conexões esta de atingir o limite:
 
   ```sql
   SELECT count(*) as total_conn FROM pg_stat_activity;
@@ -33,13 +33,13 @@ Ao abordar monitoramento no PostgreSQL geralmente são referidos dois tipos que 
   ![Consulta total de conexões](./img/consulta_total_de_conexoes.png "Consulta total de conexões")
 
 - **Monitoramento de usuários/sessões do cluster**<br/>
-  Com **pg_stat_activity**, podemos monitorar as conexões ao cluster
+  Com **pg_stat_activity**, podemos monitorar as conexões ao cluster:
 
   ```sql
   SELECT datid, datname, pid, application_name FROM pg_stat_activity;
   ```
 
-  É possível repetir o select com \watch x; sendo **x** o número de segundos entre os intervalos de consulta
+  É possível repetir o select com `\watch x;` sendo **`x`** o número de segundos entre os intervalos de consulta:
 
   ![Consulta conexões ao cluster](./img/consulta_conexoes_ao_cluster.png "Consulta de conexões ao cluster")
 
@@ -55,7 +55,7 @@ SELECT datid, datname, pid, application_name FROM pg_stat_activity;
 
 ![Consulta seções](./img/consulta_secoes.png "Consulta de seções no cluster")
 
-Encerrando as conexões com pid 3448 e 3424 correspondente as operacoes que estavam sendo realizadas com pgAdmin4 na base hardwork
+Encerrando as conexões com pid `3448` e `3424` correspondente as operacoes que estavam sendo realizadas com pgAdmin4 na base `hardwork`:
 
 ```sql
 SELECT pg_terminate_backend(3424);
@@ -69,7 +69,7 @@ Após encerramento ao tentar dar continuidade no pgAdmin4 o mesmo apresentou avi
 
 ![Aviso conexão](./img/aviso_conexao.png "Aviso conexão")
 
-Em algumas situações, caso o procedimento falhe, é possível utilizar o comando citado anteriormente KILL -9:
+Em algumas situações, caso o procedimento falhe, é possível utilizar o comando citado anteriormente `KILL -9`:
 
 ```bash
 kill -9 3424
@@ -85,17 +85,17 @@ Para realizar o monitoramento pontual dos comandos, queries, que estão sendo ex
 SELECT datname, usename, pid, state, query FROM pg_stat_activity;
 ```
 
-Como se trata de uma base que nao esta em produção, após executar a consulta citada acima, em seguida digitar o comando **\watch 2;** para que a mesma execute a cada 2 segundos é possível ver a mesma consulta sendo executada repetidas vezes:
+Como se trata de uma base que não esta em produção, após executar a consulta citada acima, em seguida digitar o comando **`\watch 2;`** para que a mesma execute a cada 2 segundos é possível ver a mesma consulta sendo executada repetidas vezes:
 
 ![Consulta para monitoramento de execução de queries](./img/consulta_com_watch.png "Consulta para monitoramento de execução de queries")
 
 ### **A querie pode apresentar os seguintes states:**
 
 - **Active**<br/>
-  O processo ***back-end*** esta executando uma query - está ativo.
+  O processo ***back-end*** esta executando uma query - **está ativo**.
 
 - **Idle**<br/>
-  O processo está aguardando um novo comando de cliente - está ocioso.
+  O processo está aguardando um novo comando de cliente - **está ocioso**.
 
 - **Idle in transaction**<br/>
   O processo esá em uma transação mas não está executando uma query.
@@ -158,7 +158,7 @@ Uma query ativa a muito tempo pode estar esperando algum recurso ou bloqueada, a
   SELECT pg_sleep(300);
   ```
 
-- **Agora verificaremos o que está rodando e qual o seu state**
+- **Agora verificaremos o que está rodando e qual o seu state:**
   ```sql
   SELECT current_timestamp-query_start AS runtime, pid, datname, usename, query, state FROM pg_stat_activity;
   ```
@@ -242,7 +242,7 @@ Ao usar transações distribuídas, ou similares, podemos acabar em uma situaç�
 
 **Para ilustrar, sera gerado um bloqueio do tipo mencionado**
 
-- **Conectando ao database *hardwork***
+- **Conectando ao database `hardwork`**
   
   ```bash
   su - postgres
@@ -258,7 +258,7 @@ Ao usar transações distribuídas, ou similares, podemos acabar em uma situaç�
 
   ![Conectando a base de dados hardwork com usuario postgres](./img/conexao_hardwork_postgres.png "Conectando a base de dados hardwork com usuario postgres")
 
-  Agora conectado ao banco de dados hardwork como usuário postgres
+  Agora conectado ao banco de dados hardwork como usuário postgres:
 
   ```sql
   UPDATE rh.departments SET department_name = 'I.T.' WHERE department_id = 1001;
@@ -284,7 +284,7 @@ Ao usar transações distribuídas, ou similares, podemos acabar em uma situaç�
   systemctl restart postgresql-14  
   ```
 
-  Para eliminar essa transação, é preciso executar um commit ou rollback, explicitamente com o comando:
+  Para eliminar essa transação, é preciso executar um `commit` ou `rollback`, explicitamente com o comando:
 
   ```sql
   ROLLBACK PREPARED '<gid>';
@@ -391,7 +391,7 @@ SELECT query, total_exec_time/calls AS avg, calls FROM pg_stat_statements ORDER 
 
 ## **Monitorando detalhadamente dados e índices de dados**
 
-### **Monitoramento de área**
+### **Monitoramento de área:**
 
 Existem alguns módulos ***contrib*** bastante úteis para monitorar espaço utilizado por índices e tabelas, como o **pgstattuple**, que disponibiliza informações relacionadas a utilização de tuplas e **pg_freespacemap**, fornecendo um meio para monitorar o **FSM** (*Free Space Map* - mapa de espaço livre).
 
