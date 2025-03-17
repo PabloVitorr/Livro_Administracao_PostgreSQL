@@ -1,21 +1,22 @@
-# **Instalações e orientações sobre suporte e versões**
+# **Instalação e orientações sobre suporte e versões**
 
-<br/>
+## **Instalação do Oracle Linux**
 
-## **Instalação do CentOS**
-
-- [**Download**](https://www.centos.org/download/ "CentOS download")
-
-- [**Mirror List**](https://www.centos.org/download/mirrors/ "List of CentOS official mirrors")
-
-- [**Isos CentOS-7**](http://mirror.ci.ifes.edu.br/centos/7.9.2009/isos/x86_64/ "Isos Instituto Federal Espírito Santo")
+[**Download Oracle Linux**](https://yum.oracle.com/oracle-linux-isos.html)
 
 ### **Atualizar o sistema**
+
+Executar o seguinte comando no terminal como root:
+
 ```bash
-yum update
+dnf update
 ```
 
-### **Configurar timezone**
+```bash
+dnf upgrade
+```
+
+### **Configurar timezone (apenas por segurança)**
 
 ```bash
 timedatectl set-timezone America/Sao_Paulo
@@ -23,140 +24,149 @@ timedatectl set-timezone America/Sao_Paulo
 
 ### **Desabilitando *firewall* e o *Selix* (conjunto de restrições de segurança extra em cima das ferramentas de segurança normais do linux) em ambiente de teste**
 
-- ### **Acesse o usuário root:**
+- ### **Com o usuario `root` pare o serviço firewall**
 
-  ```bash
-  su
-  ```
-  
-  ```bash
-  service firewalld stop
-  ```
-  
-  ```bash
-  systemctl disable firewalld
-  ```
-  
-  ```bash
-  vim /etc/sysconfig/selinux
-  # SELINUX=disable
-  ```
+	```bash
+	su
+	```
 
-<br/>
+	```bash
+	service firewalld stop
+	```
+
+	![1.png](./img/1.png)
+
+- **Em seguida desbilite o mesmo**
+
+	![3.png](./img/2.png)
+
+	```bash
+	systemctl disable firewalld
+	```
+
+- **Alterando arquivo de configuração**
+
+	```bash
+	vim /etc/sysconfig/selinux
+	# SELINUX=disable
+	```
+
+</br>
+
+---
+
+</br>
 
 ## **Instalação do cluster PostgreSQL**
 
 Seguir passo a passo conforme descrito em documentação oficial
 
 - [**PostgreSQL Downloads**](https://www.postgresql.org/download/ "Packages and Installers")
-<br/>
 
-### **Pacote *contrib***
+## **Seguindo a documentação temos os seguintes passos:**
 
-Comando responsável por realizar a instalação do servidor PostgreSQL juntamente com o pacote contrib, que permite a instalação das *extensions*, ou seja resumindo muito, se trata de um pacote contendo uma série de opcionais que podem ser instalados sobre demanda. 
+1. **Instale o repositório do PostgreSQL**
 
-```bash
-yum install -y postgresql14-server postgresql14-contrib
-```
+	```bash
+	sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+	```
 
-<br/>
+2. **Desabilite o modulo padrão do PostgreSQL**
+
+	```bash
+	sudo dnf -qy module disable postgresql
+	```
+
+3. **Instale o PostgreSQL e o pacote contrib**
+
+	```bash
+	sudo dnf install -y postgresql14-server postgresql14-contrib
+	```
+
+4. **Inicie o banco de dados**
+
+	```bash
+	sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
+	```
+
+5. **Habilite a inicialização automática no boot**
+
+	```bash
+	sudo systemctl enable postgresql-14
+	```
+
+6. **Inicie o serviço do PostgreSQL**
+
+	```bash
+	sudo systemctl start postgresql-14
+	```
+
+7. **Para validar se o PostgreSQL esta em execução basta executar o seguinte comando:**
+
+	```bash
+	sudo systemctl status postgresql-14
+	```
+
+    ![4.png](./img/4.png)
+
+</br>
+
+---
+</br>
 
 ## **Configurações iniciais**
 
-Depois da instalação para que possamos acessar o cluster PostgreSQL, e necessario realizar algumas configurações nos arquivos **postgresql.conf** e **pg_hba.conf**.
+Apos instalação e possivel observar as configuracoes nos arquivos **postgresql.conf** e **pg_hba.conf** estando ajustados inicialmente apenas para conexões locais. 
 
-O arquivo **postgresql.conf** esta ajustado inicialmente apenas para configurações locais. Podemos alterar isso modificando o parâmetro **listen_addresses**:
+No postgresql.conf caso necessario e possivel alterar isso modificando o parâmetro **listen_addresses**:
 
 
-- **Primeiramente o arquivo *postgresql.conf***<br/>
-Acessando arquivo:
+- **Acessando arquivo *postgresql.conf***
 
-  ```bash
-  var/lib/pgsql/14/data/postgresql.conf
-  ```
+	```bash
+	var/lib/pgsql/14/data/postgresql.conf
+	```
 
-- **Configuração padrão**
-  ```conf
-  #------------------------------------------------------------------------------
-  # CONNECTIONS AND AUTHENTICATION
-  #------------------------------------------------------------------------------
+	**Configuração padrão**
 
-  # - Connection Settings -
+	![5.png](./img/5.png)
 
-  #listen_addresses = 'localhost'         # what IP address(es) to listen on;
-  ```
+- **Acessando arquivo *pg_hba.conf***
 
-- **Alterando parâmetro permitindo conexões remotas**
-  ```conf
-  #------------------------------------------------------------------------------
-  # CONNECTIONS AND AUTHENTICATION
-  #------------------------------------------------------------------------------
+	```bash
+	vim /var/lib/pgsql/14/data/pg_hba.conf
+	```
 
-  # - Connection Settings -
+	**Configuração padrão**	
 
-  #listen_addresses = '*'         # what IP address(es) to listen on;
-  ```
+	![7.png](./img/7.png)
 
-- **Habilitando as conexões no *pg_hba.conf***<br/>
-Acessando arquivo:
+- Realizado a alteracao no `postgresql.conf` do campo `listen_addresses` para `'*'`.
 
-  ```bash
-  vim /var/lib/pgsql/14/data/pg_hba.conf
-  ```
+- Realizado tambem a adicao no `pg_hba.conf` da seguinte liberacao
 
-- **Configuração padrão**
-  ```conf
-  # TYPE  DATABASE        USER            ADDRESS                 METHOD
+	```bash
+	host    all             all             samenet                scram-sha-256
+	```
 
-  # "local" is for Unix domain socket connections only
-  local   all             all                                     peer
-  # IPv4 local connections:
-  host    all             all             127.0.0.1/32            scram-sha-256
-  # IPv6 local connections:
-  host    all             all             ::1/128                 scram-sha-256
-  # Allow replication connections from localhost, by a user with the
-  # replication privilege.
-  local   replication     all                                     peer
-  host    replication     all             127.0.0.1/32            scram-sha-256
-  host    replication     all             ::1/128                 scram-sha-256
-  ```
+  Com isso, depois do processo de ***reload*** do cluster, e possível conectar-se ao database desde que voce esteja na mesma rede com o usuario e com o usuario `postgres`.
 
-- **Alterando parâmetro para habilitar conexão**
-  ```conf
-  # TYPE  DATABASE        USER            ADDRESS                 METHOD
-
-  # "local" is for Unix domain socket connections only
-  local   all             all                                     peer
-  # IPv4 local connections:
-  host    all             all             127.0.0.1/32            scram-sha-256
-  # IPv6 local connections:
-  host    all             all             ::1/128                 scram-sha-256
-  # Allow replication connections from localhost, by a user with the
-  # replication privilege.
-  local   replication     all                                     peer
-  host    replication     all             127.0.0.1/32            scram-sha-256
-  host    replication     all             ::1/128                 scram-sha-256
-  host    all             all             0.0.0.0/0               scram-sha-256
-  ```
-
-  Com isso, depois do processo de ***reload*** do cluster, e possivel conectar ao database remotamente com qualquer ferramenta (por exemplo, PgAdmin). **Esses valores liberam a conexão com senha scram-sha-256 a qualquer host, não sendo, recomendados para ambiente de produção**.
-
-- **Definindo senha do user *postgres***<br/>
+- **Definindo senha do user postgres** <br/>
   Inserindo senha ao user postgres por meio o utilitário ***psql***, que é instalado juntamente com o **PostgreSQL**.
 
-  ```bash
-  psql
-  ```
+	Utilizando o utilitario `psql` atraves do usuario `postgres` para alteracao de senha
 
-  ou
+	```bash
+	sudo -i -u postgres psql
+	```
 
-  ```bash
-  sudo -i -u postgres psql
-  ```
+	```sql
+	ALTER USER postgres WITH ENCRYPTED PASSWORD '<password>';
+	```
 
-  ```sql
-  alter user postgres with encrypted password '<password>';
-  ```
+<br/>
+
+---
 
 <br/>
 
