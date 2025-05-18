@@ -8,7 +8,7 @@
 
 Repositório destinado a leitura do livro [**Administração PostgreSQL**](https://www.google.com.br/books/edition/Administra%C3%A7%C3%A3o_PostgreSQL/N9JEDwAAQBAJ?hl=pt-BR&gbpv=0)  escrito por E. V. Santos. Como se trata de um conteúdo teórico, criei este repositório com intuito de praticar os conceitos apresentados no livro, onde foram realizadas algumas alterações na configuração do ambiente e também nos conteúdos apresentados afim de trabalhar a prática.
 
-O livro contém um bom conteúdo onde por mais que não seja "avançado" pode ser utilizado como base para direcionameto em estudos mais aprofundados sobre cada tópico apresentado.
+O livro contém um bom conteúdo onde por mais que não seja "avançado" pode ser utilizado como base para direcionamento em estudos mais aprofundados sobre cada tópico apresentado.
 
 ## **Ferramentas utilizadas**
 
